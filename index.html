@@ -2167,7 +2167,8 @@
     const themeLabel = document.getElementById("themeLabel");
 
     const toastEl = document.getElementById("toast");
-
+  // 🔙 untuk kembali ke preview setelah close hashtag
+    let lastHashtagSourceId = null;
     // sembunyiin carousel ketika search fokus
     searchInput.addEventListener("focus", () => {
       heroCarousel.classList.add("is-hidden");
@@ -2401,28 +2402,49 @@
         filtersEl.appendChild(chip);
       });
 
-      if (
+        if (
         state.subFilter &&
         (state.subFilter.type === "label" || state.subFilter.type === "artist")
       ) {
         const subChip = document.createElement("button");
         subChip.className = "filter-chip active";
+        subChip.type = "button";
 
         const typeLabel = state.subFilter.type === "label" ? "Label" : "Artis";
-        subChip.innerHTML = `
-          ${typeLabel}: ${state.subFilter.value}
-          <span class="chip-close">✕</span>
-        `;
+
+        // teks utama: "Label: SOD Create" / "Artis: Remu Suzumori"
+        const textSpan = document.createElement("span");
+        textSpan.textContent = `${typeLabel}: ${state.subFilter.value}`;
+
+        // ikon close ✕
+        const closeSpan = document.createElement("span");
+        closeSpan.className = "chip-close";
+        closeSpan.textContent = "✕";
+
+        subChip.appendChild(textSpan);
+        subChip.appendChild(closeSpan);
 
         subChip.addEventListener("click", () => {
+          // simpan dulu id asal hashtag (kalau ada)
+          const returnId = lastHashtagSourceId;
+
+          // reset filter folder
           state.subFilter = null;
           state.page = 1;
+          lastHashtagSourceId = null;
+
           renderFilters();
           renderGrid();
+
+          // kalau datangnya dari hashtag, balik lagi ke preview video tadi
+          if (returnId) {
+            openPlayerInline(returnId);
+          }
         });
 
         filtersEl.appendChild(subChip);
       }
+
 
       let labelText = categoryLabelMap[state.category] || state.category;
       if (state.mode === "all" && state.subFilter) {
@@ -3255,6 +3277,10 @@
         const value = playerLabelEl.textContent.trim();
         if (!value || value === "-") return;
 
+        // simpan id video yang lagi dipreview
+        const currentId = parseInt(playerSection.dataset.currentId || "-1", 10);
+        lastHashtagSourceId = currentId > 0 ? currentId : null;
+
         state.mode = "all";
         state.category = "Cinematic";
         state.subFilter = { type: "label", value };
@@ -3264,6 +3290,7 @@
         closePlayerInline();
       });
     }
+
 
     playerActressEl.addEventListener("click", () => {
       const value = playerActressEl.textContent.trim();
@@ -3279,10 +3306,15 @@
     });
 
     // 🔥 tombol hashtag artis
+    // 🔥 tombol hashtag artis
     if (playerArtistBtn) {
       playerArtistBtn.addEventListener("click", () => {
         const value = playerActressEl.textContent.trim();
         if (!value || value === "-") return;
+
+        // simpan id video yang lagi dipreview
+        const currentId = parseInt(playerSection.dataset.currentId || "-1", 10);
+        lastHashtagSourceId = currentId > 0 ? currentId : null;
 
         state.mode = "all";
         state.category = "Relax";
