@@ -717,6 +717,11 @@
     .player-size {
       display: none !important;
     }
+@media (max-width: 480px) {
+  #playerCloseBtn {
+    display: none !important;
+  }
+}
 
  @media (max-width: 480px) {
   .player-extra {
@@ -725,7 +730,12 @@
     width: 100%;
     gap: 8px;
   }
-
+  .tag-btn {
+    padding: 7px 8px!important;      /* biar kotaknya sama gepeng */
+    gap: 3px;
+    font-size: 10px!important;        /* ukuran text sama */
+    border-radius: 5px!important;    /* curve sama kayak download/playlist */
+  }
   .player-extra-row {
     display: flex;
     width: 100%;
@@ -1667,74 +1677,42 @@
       }
     }
 
-    @media (max-width: 480px) {
-      .download-btn {
-        padding: 4px 8px;
-        gap: 3px;
-        font-size: 9px;
-        border-radius: 5px;
-      }
+   @media (max-width: 480px) {
+  .download-btn {
+    padding: 4px 8px;
+    gap: 3px;
+    font-size: 9px;
+    border-radius: 5px;
+  }
 
-      .download-btn svg {
-        width: 14px;
-        height: 14px;
-      }
+  .download-btn svg {
+    width: 14px;
+    height: 14px;
+  }
 
-      .playlist-btn {
-        padding: 3px 8px!important;
-        gap: 3px;
-        font-size: 9px;
-        border-radius: 5px!important;
-      }
+  .playlist-btn {
+    padding: 3px 8px!important;
+    gap: 3px;
+    font-size: 9px;
+    border-radius: 5px!important;
+  }
 
-      .playlist-btn svg {
-        width: 14px;
-        height: 14px;
-      }
+  .playlist-btn svg {
+    width: 14px;
+    height: 14px;
+  }
 
-      .player-extra-row {
-        gap: 6px; 
-      }
+  .player-extra-row {
+    gap: 6px; 
+  }
 
-      .player-size {
-        font-size: 9px;
-      }
+  .player-size {
+    font-size: 9px;
+  }
 
-      .thumb-wrapper {
-        height: 90px !important;
-      }
+  
+}
 
-      .thumb {
-        height: 100px !important;
-        object-fit: cover;
-        border-radius: 8px !important;
-      }
-
-      .card {
-        padding: 6px !important;
-        gap: 4px !important;
-        border-radius: 11px !important;
-      }
-
-      .card-main {
-        padding: 2px !important;
-        gap: 2px !important;
-      }
-
-      .card-title {
-        font-size: 12px !important;
-        line-height: 1.25;
-      }
-
-      #filterInfo {
-        display: none !important;
-      }
-
-      body.theme-light .hero-dot.active {
-        background: #e81d27 !important;
-        box-shadow: 0 0 8px #e81d27aa !important;
-      }
-    }
 
     /* 🔥 MODE MOBILE: sembunyikan detail & deskripsi di player */
     @media (max-width: 768px) {
