@@ -1845,9 +1845,14 @@
 
     <section id="playerSection" class="player-section">
       <div class="player-card">
-        <div class="player-header">
+               <div class="player-header">
           <div class="player-title" id="playerTitle">Judul Video</div>
           <div class="player-header-right">
+            <!-- 🔙 tombol kembali ke video sebelumnya -->
+            <button id="playerBackBtn" class="player-close-btn" style="display:none;">
+              ⬅ 
+            </button>
+
             <button id="playerWideBtn" class="player-pill-btn" title="Perbesar tampilan">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M4 9V4h5M15 4h5v5M4 15v5h5M15 20h5v-5" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -1858,6 +1863,7 @@
             </button>
           </div>
         </div>
+
         <div class="player-body">
           <div class="player-media">
             <video id="playerVideo" class="player-video" controls>
@@ -1898,38 +1904,39 @@
 
             <div class="player-desc" id="playerDescription"></div>
 
-            <div class="player-extra">
-              <!-- ROW 1: Download + #Label -->
-              <div class="player-extra-row">
-                <a id="playerDownload" class="download-btn" href="#" target="_blank" rel="noopener">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#0F9D58" d="M7.5 3L2 12l3.75 6.5L11.3 9.5 7.5 3z"></path>
-                    <path fill="#4285F4" d="M16.5 3h-9l3.8 6.5L18 18.5 22 12 16.5 3z"></path>
-                    <path fill="#F4B400" d="M5.75 18.5L8.5 22h9l-3.5-6-8.25 2.5z"></path>
-                  </svg>
-                  <span class="download-label"></span>
-                </a>
-                <span class="player-size" id="playerSize"></span>
+         <div class="player-extra">
+  <!-- ROW 1: Download + Playlist -->
+  <div class="player-extra-row">
+    <a id="playerDownload" class="download-btn" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="#0F9D58" d="M7.5 3L2 12l3.75 6.5L11.3 9.5 7.5 3z"></path>
+        <path fill="#4285F4" d="M16.5 3h-9l3.8 6.5L18 18.5 22 12 16.5 3z"></path>
+        <path fill="#F4B400" d="M5.75 18.5L8.5 22h9l-3.5-6-8.25 2.5z"></path>
+      </svg>
+      <span class="download-label"></span>
+    </a>
+    <span class="player-size" id="playerSize"></span>
 
-                <button id="playerLabelBtn" type="button" class="tag-btn">
-                  #Label
-                </button>
-              </div>
+    <button id="playerPlaylistMainBtn" type="button" class="playlist-btn" title="Tambah ke playlist">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M6 3h12v18l-6-4-6 4z"></path>
+      </svg>
+      <span></span>
+    </button>
+  </div>
 
-              <!-- ROW 2: Playlist + #Artis -->
-              <div class="player-extra-row">
-                <button id="playerPlaylistMainBtn" type="button" class="playlist-btn" title="Tambah ke playlist">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="currentColor" d="M6 3h12v18l-6-4-6 4z"></path>
-                  </svg>
-                  <span></span>
-                </button>
+  <!-- ROW 2: #Label + #Artis -->
+  <div class="player-extra-row">
+    <button id="playerLabelBtn" type="button" class="tag-btn">
+      #Label
+    </button>
 
-                <button id="playerArtistBtn" type="button" class="tag-btn">
-                  #Artis
-                </button>
-              </div>
-            </div>
+    <button id="playerArtistBtn" type="button" class="tag-btn">
+      #Artis
+    </button>
+  </div>
+</div>
+
           </div>
         </div>
       </div>
@@ -2158,6 +2165,7 @@
     const playerPlaylistMainBtn = document.getElementById("playerPlaylistMainBtn");
     const playerLabelBtn = document.getElementById("playerLabelBtn");
     const playerArtistBtn = document.getElementById("playerArtistBtn");
+    const playerBackBtn = document.getElementById("playerBackBtn");
 
     const heroCarousel = document.getElementById("heroCarousel"); 
 
@@ -2167,6 +2175,10 @@
     const themeLabel = document.getElementById("themeLabel");
 
     const toastEl = document.getElementById("toast");
+        // stack riwayat video di player (buat tombol Back)
+    let playerHistoryStack = [];
+    let isNavigatingBack = false;
+
   // 🔙 untuk kembali ke preview setelah close hashtag
     let lastHashtagSourceId = null;
     // sembunyiin carousel ketika search fokus
@@ -2639,7 +2651,7 @@
       }
     });
 
-    function closePlayerInline() {
+       function closePlayerInline() {
       playerSection.classList.remove("show");
       playerSection.classList.remove("wide");
       playerSection.classList.remove("cinema");
@@ -2650,6 +2662,10 @@
       playerDriveWrap.innerHTML = "";
       delete playerSection.dataset.currentId;
       delete playerSection.dataset.mode;
+
+      // 🔁 reset history tombol Back
+      playerHistoryStack = [];
+      updateBackButton();
 
       if (filtersEl) filtersEl.style.display = "flex";
       if (filterInfoEl) filterInfoEl.style.display = "block";
@@ -3117,6 +3133,11 @@
         playerWideBtn.title = "Kembalikan ke tampilan awal";
       }
     }
+    function updateBackButton() {
+      if (!playerBackBtn) return;
+      playerBackBtn.style.display =
+        playerHistoryStack.length > 0 ? "inline-flex" : "none";
+    }
 
     function setPlayerMode(mode) {
       playerSection.classList.remove("wide", "cinema");
@@ -3150,6 +3171,12 @@
     function openPlayerInline(id) {
       const video = videos.find((v) => v.id === id);
       if (!video) return;
+            // kalau sudah ada video yang lagi diputar, simpan dulu ke history
+      const currentIdExisting = parseInt(playerSection.dataset.currentId || "-1", 10);
+      if (!isNavigatingBack && currentIdExisting > 0 && currentIdExisting !== id) {
+        playerHistoryStack.push(currentIdExisting);
+      }
+
 
       playerSection.dataset.currentId = id;
       playerTitleEl.textContent = video.title;
@@ -3230,8 +3257,10 @@
         playerVideoEl.currentTime = 0;
       }
 
-      updatePlayerPlaylistButton(id);
+            updatePlayerPlaylistButton(id);
       addToHistory(id);
+      updateBackButton();
+
 
       checkCarouselVisibility();
       renderGrid();
@@ -3251,6 +3280,24 @@
     }
 
     playerCloseBtn.addEventListener("click", closePlayerInline);
+    if (playerBackBtn) {
+      playerBackBtn.addEventListener("click", () => {
+        if (!playerHistoryStack.length) return;
+
+        const prevId = playerHistoryStack.pop();
+        if (!prevId) {
+          updateBackButton();
+          return;
+        }
+
+        // kasih tau openPlayerInline kalau ini navigasi "mundur"
+        isNavigatingBack = true;
+        openPlayerInline(prevId);
+        isNavigatingBack = false;
+
+        updateBackButton();
+      });
+    }
 
     playerPlaylistMainBtn.addEventListener("click", () => {
       const id = parseInt(playerSection.dataset.currentId || "-1", 10);
