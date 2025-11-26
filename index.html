@@ -27,13 +27,14 @@
       --chip-bg: #1d1d21;
       --overlay-grad: linear-gradient(to top, #000000aa, #e0000000);
       --shadow-strong: 0 10px 30px rgba(0,0,0,0.5);
-        --pill-dark-bg: rgba(15,23,42,0.8);
-  --pill-dark-border: rgba(148,163,184,0.4);
-  --pill-dark-text: #e5e7eb;
+      --pill-dark-bg: rgba(15,23,42,0.8);
+      --pill-dark-border: rgba(148,163,184,0.4);
+      --pill-dark-text: #e5e7eb;
     }
-body.theme-dark .card {
-  background: #2a2a2a85 !important;
-}
+
+    body.theme-dark .card {
+      background: #2a2a2a85 !important;
+    }
 
     /* LIGHT THEME OVERRIDE */
     body.theme-light {
@@ -53,11 +54,12 @@ body.theme-dark .card {
       --overlay-grad: linear-gradient(to top, #00000066, #00000000);
       --shadow-strong: 0 10px 25px rgba(15, 23, 42, 0.15);
     }
-body.theme-light {
-  --text: #111111 !important;
-  --text-white: #000000 !important; 
-  --muted: #323232 !important;
-}
+
+    body.theme-light {
+      --text: #111111 !important;
+      --text-white: #000000 !important; 
+      --muted: #323232 !important;
+    }
 
     #clockColon {
       display: inline-block;
@@ -94,7 +96,7 @@ body.theme-light {
     }
 
     .page {
-      max-width: 1450px;
+      max-width: 1300px;
       margin: 0 auto;
       padding: 20px 16px 40px;
       position: relative;
@@ -212,9 +214,9 @@ body.theme-light {
       box-shadow: 0 0 8px #34d399aa;
     }
 
-#modeLabel {
-  display: none;
-}
+    #modeLabel {
+      display: none;
+    }
 
     .theme-toggle, .header-small-btn {
       border-radius: var(--radius-pill);
@@ -250,30 +252,30 @@ body.theme-light {
     /* =========================================
        HERO CAROUSEL SECTION
        ========================================= */
-.hero-section {
-  position: relative;
-  width: 100%;
-  height: 400px;                 /* tinggi normal */
-  border-radius: 24px;
-  overflow: hidden;
-  margin-bottom: 30px;
-  border: none;
-  box-shadow: 0 0 0 1px var(--border-light), 0 20px 50px -10px rgba(0,0,0,0.5), 0 0 20px var(--glow-color) inset;
-  opacity: 1;
-  transition:
-    height 0.35s ease,
-    opacity 0.25s ease,
-    margin-bottom 0.35s ease;
-}
+    .hero-section {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 30px;
+      border: none;
+      box-shadow: 0 0 0 1px var(--border-light), 
+                  0 20px 50px -10px rgba(0,0,0,0.5), 
+                  0 0 20px var(--glow-color) inset;
+      opacity: 1;
+      transition:
+        height 0.35s ease,
+        opacity 0.25s ease,
+        margin-bottom 0.35s ease;
+    }
 
-/* keadaan tersembunyi → tinggi 0, opacity 0, margin ilang */
-.hero-section.is-hidden {
-  height: 0;
-  opacity: 0;
-  margin-bottom: 0;
-  pointer-events: none;
-}
-
+    .hero-section.is-hidden {
+      height: 0;
+      opacity: 0;
+      margin-bottom: 0;
+      pointer-events: none;
+    }
 
     .hero-slide {
       position: absolute;
@@ -313,8 +315,22 @@ body.theme-light {
     }
     
     body.theme-light .hero-overlay-gradient {
-        background: linear-gradient(to right, #00000053 0%, #0000001e 40%, transparent 100%),
-                    linear-gradient(to top, #0000003c 0%, transparent 50%);
+      background: linear-gradient(to right, #00000053 0%, #0000001e 40%, transparent 100%),
+                  linear-gradient(to top, #0000003c 0%, transparent 50%);
+    }
+
+    @media (max-width: 400px) {
+      .download-btn,
+      #playerPlaylistMainBtn {
+        padding: 8px;
+        border-radius: 8px;
+      }
+
+      .download-btn svg,
+      #playerPlaylistMainBtn svg {
+        width: 18px;
+        height: 18px;
+      }
     }
 
     .hero-content {
@@ -329,10 +345,9 @@ body.theme-light {
     }
     
     body.theme-light .hero-content {
-        color: #000;
+      color: #000;
     }
 
-    /* Hero Typography */
     .hero-meta {
       display: flex;
       align-items: center;
@@ -371,7 +386,25 @@ body.theme-light {
       gap: 14px;
     }
 
-    /* ====== HERO BUTTONS ====== */
+    @media (max-width: 480px) {
+      .hero-actions {
+        gap: 11px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .download-btn,
+      .playlist-btn {
+        font-size: 10px !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .player-title {
+        font-size: 14px!important;
+      }
+    }
+
     .hero-btn {
       padding: 8px 20px;
       border-radius: var(--radius-btn);
@@ -396,11 +429,10 @@ body.theme-light {
       box-shadow: 0 6px 20px rgba(229, 9, 20, 0.6), 0 0 0 1px rgba(229, 9, 20, 0.4) inset;
     }
 
-    /* Tombol Playlist Pink Stroke & Tumpul */
     .hero-btn-pink-outline {
       background: transparent;
-        color: #d5d5d5;    
-       border: 1px solid #d5d5d5d0; 
+      color: #d5d5d5;    
+      border: 1px solid #d5d5d5d0; 
       box-shadow: 0 0 10px var(--accent-soft);
       backdrop-filter: blur(4px);
       border-radius: var(--radius-btn);
@@ -416,7 +448,6 @@ body.theme-light {
     .hero-indicators {
       position: absolute;
       bottom: 30px;
-
       right: 30px;
       display: flex;
       gap: 8px;
@@ -424,8 +455,8 @@ body.theme-light {
     }
 
     .hero-dot {
-       width: 16px;
-  height: 4px;
+      width: 16px;
+      height: 4px;
       background: rgba(255,255,255,0.3);
       border-radius: 2px;
       cursor: pointer;
@@ -433,52 +464,43 @@ body.theme-light {
     }
     
     body.theme-light .hero-dot {
-    background: rgba(255,255,255,0.3); 
+      background: rgba(255,255,255,0.3); 
     }
+
     body.theme-light .hero-dot.active {
-  background: var(--accent); /* paksa tetap merah dark mode */
-}
+      background: var(--accent);
+    }
 
     .hero-dot.active {
       background: var(--accent-red);
       box-shadow: 0 0 8px var(--accent-red);
     }
 
-    /* HERO MOBILE RESPONSIVE */
     @media (max-width: 768px) {
-        .hero-section { height: 250px; }
-        
-        .hero-title { font-size: 18px; }
-        .hero-content { left: 16px; max-width: 95%; }
-        
-        .hero-meta {
-            font-size: 10px;
-            margin-bottom: 6px;
-        }
+      .theme-toggle,
+      .header-small-btn,
+      .pill-badge {
+        padding: 4px 8px;
+        font-size: 10px;
+      }
 
-        .hero-desc { 
-            font-size: 10px;
-            margin-bottom: 18px;
-            -webkit-line-clamp: 2; 
-        }
-        
-        .hero-btn {
-            padding: 5px 14px;
-            font-size: 10px;
-            border-radius: 8px;
-            gap: 5px;
-        }
+      .brand-text-title {
+        font-size: 16px;
+      }
+
+      .brand-text-sub {
+        font-size: 11px;
+      }
     }
-    
+
     body.theme-light .hero-desc {
-        color: #374151;
-        text-shadow:
-    0 0 8px rgba(0,0,0,0.40),   /* blur kuat */
-    0 2px 6px rgba(0,0,0,0.30); /* bayangan jatuh */
-        font-weight: 500;
+      color: #374151;
+      text-shadow:
+        0 0 8px rgba(0,0,0,0.40),
+        0 2px 6px rgba(0,0,0,0.30);
+      font-weight: 500;
     }
 
-    /* Controls */
     .controls {
       display: flex;
       flex-direction: column;
@@ -604,7 +626,6 @@ body.theme-light {
 
     .sort-menu button:hover {
       background: var(--accent-soft);
-      
     }
 
     .sort-menu button.active {
@@ -621,9 +642,10 @@ body.theme-light {
       flex-wrap: wrap;
       gap: 8px;
     }
+
     .filters-spacer {
-  flex: 1; /* dorong elemen setelahnya ke sisi kanan */
-}
+      flex: 1;
+    }
 
     .filter-chip {
       font-size: 12px;
@@ -692,6 +714,39 @@ body.theme-light {
       display: block;
     }
 
+    .player-size {
+      display: none !important;
+    }
+
+ @media (max-width: 480px) {
+  .player-extra {
+    flex-direction: column !important; /* 🔥 selalu vertikal, 2 baris */
+    align-items: stretch;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .player-extra-row {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+    margin-right: 0; /* nggak perlu lagi */
+  }
+
+  .player-extra-row .download-btn,
+  .player-extra-row .playlist-btn,
+  .player-extra-row .tag-btn {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+
+  #playerPlaylistMainBtn {
+    margin-left: 0;
+  }
+}
+
+
     .player-card {
       background: transparent;
       border-radius: 20px;
@@ -700,10 +755,11 @@ body.theme-light {
       padding: 0 0 12px;
       animation: playerIn 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
     }
-/* 🚫 Matikan animasi kalau body punya class no-player-anim */
-body.no-player-anim .player-card {
-  animation: none;
-}
+
+    body.no-player-anim .player-card {
+      animation: none;
+    }
+
     @keyframes playerIn {
       from {
         opacity: 0;
@@ -722,20 +778,20 @@ body.no-player-anim .player-card {
       gap: 10px;
       margin-bottom: 10px;
     }
+
     .drive-logo {
-  background: none !important;     /* hilangkan gradient */
-  box-shadow: none !important;     /* hilangkan glow */
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+      background: none !important;
+      box-shadow: none !important;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-.drive-logo svg {
-  width: 35px;
-  height: 35px;
-}
-
+    .drive-logo svg {
+      width: 35px;
+      height: 35px;
+    }
 
     .player-title {
       font-size: 16px;
@@ -753,8 +809,8 @@ body.no-player-anim .player-card {
 
     .player-pill-btn {
       border-radius: 999px;
-      border: 1px solid var(--border-light);
-      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--pill-dark-border);
+      background: var(--pill-dark-bg);
       padding: 6px;
       font-size: 0;
       display: inline-flex;
@@ -775,13 +831,15 @@ body.no-player-anim .player-card {
       border-color: #d1d5db;
       color: #111827;
     }
+
     body.theme-light .hero-title  {
-  color: #ffffff; /* gelap elegan, cocok buat light mode */
-}
-body.theme-light .hero-desc {
-color: #f5c542; 
-text-shadow: 0 2px 5px rgba(0,0,0,0.25);
-}
+      color: #ffffff;
+    }
+
+    body.theme-light .hero-desc {
+      color: #f5c542; 
+      text-shadow: 0 2px 5px rgba(0,0,0,0.25);
+    }
 
     .player-pill-btn svg {
       width: 16px;
@@ -790,20 +848,19 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       stroke: currentColor;
     }
 
-.player-close-btn {
-  border-radius: 999px;
-  border: 1px solid var(--pill-dark-border);
-  background: var(--pill-dark-bg);
-  backdrop-filter: blur(4px);
-  color: var(--pill-dark-text);
-  font-size: 11px;
-  padding: 4px 11px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
+    .player-close-btn {
+      border-radius: 999px;
+      border: 1px solid var(--pill-dark-border);
+      background: var(--pill-dark-bg);
+      backdrop-filter: blur(4px);
+      color: var(--pill-dark-text);
+      font-size: 11px;
+      padding: 4px 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
 
     .player-close-btn:hover {
       background: rgba(15,23,42,1);
@@ -817,7 +874,7 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
 
     .player-body {
       display: grid;
-       grid-template-columns: 1.9fr 0.5fr;
+      grid-template-columns: 1.9fr 0.5fr;
       gap: 26px;
       align-items: flex-start;
     }
@@ -849,6 +906,7 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       background: #000;
       box-shadow: 0 0 0 1px #23233a, 0 10px 30px rgba(0,0,0,0.3);
     }
+
     body.theme-light #playerDriveWrap iframe {
       box-shadow: 0 0 0 1px #d1d5db, 0 10px 30px rgba(0,0,0,0.1);
     }
@@ -871,7 +929,7 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
     }
 
     .meta-label {
-      color: #7c829c;
+      color: #7b7ba0;
       font-weight: 500;
     }
 
@@ -910,21 +968,22 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       font-size: 12px;
       line-height: 1.6;
       color: #d0d0e5;
-  border-bottom: 1px solid #4a4a4aa4;
+      border-bottom: 1px solid #4a4a4aa4;
       padding-bottom: 10px;
     }
 
     body.theme-light .player-desc {
       color: #111827;
     }
-.search-icon svg {
-  width: 14px;
-  height: 14px;
-  opacity: 0.6;       /* makin soft */
-  stroke-linecap: round;
-}
 
-    /* PLAYER EXTRA: DOWNLOAD + PLAYLIST */
+    .search-icon svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.6;
+      stroke-linecap: round;
+    }
+
+    /* PLAYER EXTRA: DOWNLOAD + PLAYLIST + TAG */
     .player-extra {
       margin-top: 6px;
       display: flex;
@@ -933,15 +992,16 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       gap: 12px;
       font-size: 8px;
       align-self: flex-start;
+      width: 100%;
     }
 
     .player-extra-row {
       display: flex;
       align-items: center;
       gap: 11px;
+      width: 100%;
     }
 
-    /* Soft border buttons */
     .download-btn {
       border-radius: var(--radius-pill);
       border: none;
@@ -956,6 +1016,7 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       cursor: pointer;
       transition: 0.18s ease;
       font-size: 12px;
+      white-space: nowrap;
     }
 
     .download-btn:hover {
@@ -969,15 +1030,17 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       display: block;
     }
 
-    .player-size {
-      color: var(--muted);
-    }
-
     body.theme-light .download-btn {
       background: #ffffff;
     }
 
-    /* PLAYLIST BUTTON UTAMA DI BAWAH DOWNLOAD */
+    @media (max-width: 480px) {
+      .download-btn {
+        padding-top: 5px!important;
+        padding-bottom: 6px!important;
+      }
+    }
+
     .playlist-btn {
       border-radius: var(--radius-pill);
       border: none;
@@ -991,6 +1054,7 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       cursor: pointer;
       font-size: 12px;
       transition: 0.18s ease;
+      white-space: nowrap;
     }
 
     .playlist-btn svg {
@@ -1012,30 +1076,78 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       background: #ffffff;
     }
 
+    /* 🔥 tombol hashtag */
+    .tag-btn {
+      border-radius: var(--radius-pill);
+      border: none;
+      box-shadow: 0 0 0 1px var(--border-light);
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 6px 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .tag-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 0 1px var(--accent), 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    body.theme-light .tag-btn {
+      background: #ffffff;
+    }
+
     /* ==============================
        WIDE PLAYER MODE – VIDEO SAJA
        ============================== */
     .player-section.wide .player-body {
       grid-template-columns: 1fr;
       gap: 16px;
-      
     }
 
     .player-section.wide .player-media {
       max-width: 100%;
-      
     }
 
     .player-section.wide .player-video,
     .player-section.wide #playerDriveWrap iframe {
       aspect-ratio: 16 / 9;
       width: 100%;
-      
       height: auto;
     }
 
     .player-section.wide .player-meta {
       display: none !important;
+    }
+
+    /* PREVIEW NORMAL, KECIL SEDIKIT */
+    .player-section:not(.wide):not(.cinema) .player-media {
+      max-width: 85%;
+      margin-left: 0px;
+    }
+
+    .player-section:not(.wide):not(.cinema) .player-video,
+    .player-section:not(.wide):not(.cinema) #playerDriveWrap iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+    }
+
+    @media (max-width: 768px) {
+      .player-section:not(.wide):not(.cinema) .player-media {
+        max-width: 100%;
+        margin: 0 auto;
+      }
+    }
+
+    .player-section:not(.wide):not(.cinema) .player-meta {
+      margin-left: -135px;
     }
 
     /* =========================
@@ -1063,7 +1175,7 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
     }
 
     body.cinema-mode .page {
-      max-width: 1050px;
+      max-width: 1150px;
       margin: 0 auto;
       padding: 16px 16px 24px;
     }
@@ -1151,7 +1263,6 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       opacity: 0.5;
     }
 
-    /* MAIN CARD - SOFT BORDER IMPLEMENTATION */
     .card {
       position: relative;
       background: var(--card-bg);
@@ -1174,8 +1285,9 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
     body.theme-light .card {
       box-shadow: 0 4px 15px rgba(0,0,0,0.05), 0 0 0 1px var(--border-light);
     }
+
     body.theme-light .card:hover {
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 0 0 1px var(--accent-soft) inset;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 0 0 1px var(--accent-soft) inset;
     }
 
     .grid.list-view .card {
@@ -1291,7 +1403,6 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       margin-top: 14px;
     }
 
-    /* Soft Border Generic Btn */
     .btn {
       border-radius: var(--radius-pill);
       border: none;
@@ -1308,7 +1419,6 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       box-shadow: 0 0 0 1px var(--accent), 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    /* PAGINATION */
     #pagination {
       display: inline-flex;
       gap: 6px;
@@ -1316,7 +1426,6 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       justify-content: center;
     }
 
-    /* Soft Border Pagination */
     .page-btn {
       border-radius: var(--radius-pill);
       border: none;
@@ -1377,6 +1486,14 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       transform: translateX(-50%) translateY(0);
     }
 
+
+@media (max-width: 480px) {
+  #playerWideBtn {
+    display: none !important;
+  }
+}
+
+
     @media (max-width: 900px) {
       .player-body {
         grid-template-columns: 1fr;
@@ -1388,16 +1505,265 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
         flex-direction: column;
         align-items: flex-start;
       }
+
       .header-right {
         align-self: stretch;
         justify-content: flex-start;
         flex-wrap: wrap;
       }
+
       .grid.list-view .thumb {
         width: 160px;
         height: 100px;
       }
+
+      .player-section:not(.wide):not(.cinema) .player-meta {
+        margin-left: 0 !important;
+        max-width: 100%;
+        text-align: left;
+      }
     }
+
+    @media (max-width: 480px) {
+      .header-right {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 11px;
+      }
+
+      .grid-separator {
+        margin-top: -10px!important;
+        margin-bottom: 8px!important;
+      }
+
+      .header-small-btn {
+        padding: 5px 10px;
+        font-size: 10.5px;
+        border-radius: 9px;
+        min-width: auto;
+      }
+
+      .theme-toggle {
+        padding: 4px 8px;
+        font-size: 9.5px;
+        border-radius: 8px;
+        min-width: auto;
+      }
+
+      .pill-badge {
+        padding: 8px 14px;
+        font-size: 12px;
+        border-radius: var(--radius-pill);
+        min-width: auto;
+      }
+
+      .sort-chip {
+        padding: 20px 14px!important;
+        font-size: 12px!important;
+        border-radius: 12px!important;
+      }
+
+      .header-right {
+        gap: 8px;
+      }
+
+      .header-small-btn,
+      .theme-toggle,
+      .pill-badge {
+        padding: 9px 9px;
+        font-size: 11px;
+        border-radius: 12px;
+        min-width: auto;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+
+      .hero-section {
+        border-radius: 14px !important;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .hero-section {
+        height: 225px;
+        border-radius: 18px;
+        margin-bottom: 16px;
+      }
+
+      .hero-content {
+        left: 14px;
+        right: 14px;
+        top: 52%;
+        transform: translateY(-50%);
+      }
+
+      .hero-meta {
+        font-size: 8px;
+        margin-bottom: 4px;
+      }
+
+      .hero-title {
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+
+      .hero-desc {
+        font-size: 8px;
+        -webkit-line-clamp: 2;
+        margin-bottom: 12px;
+      }
+
+      .hero-btn {
+        padding: 2px 9px;
+        font-size: 8.5px;
+        gap: 2px;
+        border-radius: 10px;
+      }
+
+      .hero-btn svg {
+        width: 10px;
+        height: 10px;
+      }
+
+      .hero-btn-pink-outline {
+        border-width: 1px;
+        padding: 3px 8px;
+      }
+
+      .hero-btn-primary {
+        box-shadow: 0 2px 6px rgba(229, 9, 20, 0.30),
+                    0 0 0 1px rgba(229, 9, 20, 0.20) inset;
+      }
+
+      .hero-indicators {
+        bottom: 10px;
+        right: 12px;
+      }
+
+      .top-controls-row {
+        gap: 6px;
+      }
+
+      .sort-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+      }
+
+      .player-actions {
+        gap: 6px;
+      }
+
+      .player-actions button {
+        padding: 8px 10px;
+        font-size: 11.5px;
+        border-radius: 8px;
+      }
+
+      .player-actions button svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .download-btn {
+        padding: 4px 8px;
+        gap: 3px;
+        font-size: 9px;
+        border-radius: 5px;
+      }
+
+      .download-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .playlist-btn {
+        padding: 3px 8px!important;
+        gap: 3px;
+        font-size: 9px;
+        border-radius: 5px!important;
+      }
+
+      .playlist-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .player-extra-row {
+        gap: 6px; 
+      }
+
+      .player-size {
+        font-size: 9px;
+      }
+
+      .thumb-wrapper {
+        height: 90px !important;
+      }
+
+      .thumb {
+        height: 100px !important;
+        object-fit: cover;
+        border-radius: 8px !important;
+      }
+
+      .card {
+        padding: 6px !important;
+        gap: 4px !important;
+        border-radius: 11px !important;
+      }
+
+      .card-main {
+        padding: 2px !important;
+        gap: 2px !important;
+      }
+
+      .card-title {
+        font-size: 12px !important;
+        line-height: 1.25;
+      }
+
+      #filterInfo {
+        display: none !important;
+      }
+
+      body.theme-light .hero-dot.active {
+        background: #e81d27 !important;
+        box-shadow: 0 0 8px #e81d27aa !important;
+      }
+    }
+
+    /* 🔥 MODE MOBILE: sembunyikan detail & deskripsi di player */
+    @media (max-width: 768px) {
+      .player-meta .meta-row,
+      .player-desc {
+        display: none !important;
+      }
+
+      .player-extra {
+        margin-top: 8px;
+        gap: 8px;
+      }
+
+      .player-extra-row {
+        justify-content: space-between;
+      }
+
+      .player-extra-row .download-btn,
+      .player-extra-row .playlist-btn,
+      .player-extra-row .tag-btn {
+        flex: 1;
+        justify-content: center;
+      }
+
+      .player-size {
+        display: none !important;
+      }
+    }
+
   </style>
 </head>
 <body class="theme-dark">
@@ -1416,14 +1782,14 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
     <div class="header">
       <div class="brand">
         <div class="brand-logo drive-logo">
-  <svg viewBox="0 0 24 24">
-    <path fill="#0F9D58" d="M7.5 3L2 12l3.75 6.5L11.3 9.5 7.5 3z"></path>
-    <path fill="#4285F4" d="M16.5 3h-9l3.8 6.5L18 18.5 22 12 16.5 3z"></path>
-    <path fill="#F4B400" d="M5.75 18.5L8.5 22h9l-3.5-6-8.25 2.5z"></path>
-  </svg>
-</div>
+          <svg viewBox="0 0 24 24">
+            <path fill="#0F9D58" d="M7.5 3L2 12l3.75 6.5L11.3 9.5 7.5 3z"></path>
+            <path fill="#4285F4" d="M16.5 3h-9l3.8 6.5L18 18.5 22 12 16.5 3z"></path>
+            <path fill="#F4B400" d="M5.75 18.5L8.5 22h9l-3.5-6-8.25 2.5z"></path>
+          </svg>
+        </div>
         <div>
-          <div class="brand-text-title">drive</div>
+          <div class="brand-text-title">drive flix</div>
           <div class="brand-text-sub">made by ndra</div>
         </div>
       </div>
@@ -1431,6 +1797,10 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
         <button class="header-small-btn" id="homeBtn">🏠 Home</button>
         <button class="header-small-btn" id="playlistBtn">📁 Playlist</button>
         <button class="header-small-btn" id="historyBtn">🕒 History</button>
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeIcon">🌙</span>
+          <span id="themeLabel">Dark</span>
+        </button>
         <div class="pill-badge">
           <span class="pill-dot"></span>
           <span id="clockText">
@@ -1439,10 +1809,6 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
             <span id="clockMinutes">--</span>
           </span>
         </div>
-        <button class="theme-toggle" id="themeToggle">
-          <span id="themeIcon">🌙</span>
-          <span id="themeLabel">Dark</span>
-        </button>
       </div>
     </div>
 
@@ -1452,11 +1818,11 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       <div class="top-controls-row">
         <div class="search-box" id="searchBox">
           <span class="search-icon">
-  <svg viewBox="0 0 24 24">
-    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
-    <line x1="16" y1="16" x2="21" y2="21" stroke="currentColor" stroke-width="2"/>
-  </svg>
-</span>
+            <svg viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
+              <line x1="16" y1="16" x2="21" y2="21" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </span>
           <input id="searchInput" type="text" placeholder="Cari judul atau kategori..." />
         </div>
 
@@ -1471,23 +1837,20 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
             <button data-value="oldest">Terlama</button>
           </div>
         </div>
-
-       
       </div>
       <div class="filters-row" id="filters"></div>
     </div>
 
-   <div class="info-row">
-  <div id="videoInfo">
-    <strong id="countText">0</strong>
-    <span id="countSuffix"> video ditemukan</span> 
-    <span id="modeLabel">Semua video</span>
-  </div>
-  <div id="filterInfo">
-    Filter kategori: <strong id="activeFilterLabel">Semua</strong>
-  </div>
-</div>
-
+    <div class="info-row">
+      <div id="videoInfo">
+        <strong id="countText">0</strong>
+        <span id="countSuffix"> video ditemukan</span> 
+        <span id="modeLabel">Semua video</span>
+      </div>
+      <div id="filterInfo">
+        Filter kategori: <strong id="activeFilterLabel">Semua</strong>
+      </div>
+    </div>
 
     <section id="playerSection" class="player-section">
       <div class="player-card">
@@ -1500,7 +1863,7 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
               </svg>
             </button>
             <button id="playerCloseBtn" class="player-close-btn">
-              ✕ Tutup
+              <span class="home-icon">🏠</span> Home
             </button>
           </div>
         </div>
@@ -1545,6 +1908,7 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
             <div class="player-desc" id="playerDescription"></div>
 
             <div class="player-extra">
+              <!-- ROW 1: Download + #Label -->
               <div class="player-extra-row">
                 <a id="playerDownload" class="download-btn" href="#" target="_blank" rel="noopener">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -1552,17 +1916,28 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
                     <path fill="#4285F4" d="M16.5 3h-9l3.8 6.5L18 18.5 22 12 16.5 3z"></path>
                     <path fill="#F4B400" d="M5.75 18.5L8.5 22h9l-3.5-6-8.25 2.5z"></path>
                   </svg>
-                  <span class="download-label">Download dari Drive</span>
+                  <span class="download-label"></span>
                 </a>
                 <span class="player-size" id="playerSize"></span>
+
+                <button id="playerLabelBtn" type="button" class="tag-btn">
+                  #Label
+                </button>
               </div>
 
-              <button id="playerPlaylistMainBtn" type="button" class="playlist-btn" title="Tambah ke playlist">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="currentColor" d="M6 3h12v18l-6-4-6 4z"></path>
-                </svg>
-                <span>Tambah ke Playlist</span>
-              </button>
+              <!-- ROW 2: Playlist + #Artis -->
+              <div class="player-extra-row">
+                <button id="playerPlaylistMainBtn" type="button" class="playlist-btn" title="Tambah ke playlist">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor" d="M6 3h12v18l-6-4-6 4z"></path>
+                  </svg>
+                  <span></span>
+                </button>
+
+                <button id="playerArtistBtn" type="button" class="tag-btn">
+                  #Artis
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1635,7 +2010,7 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
       </svg>
     `;
 
-    /* ====== VIDEO LIST – DISISI 4 SAJA ====== */
+    /* ====== VIDEO LIST ====== */
     const videos = [
       {
         id: 1,
@@ -1728,7 +2103,6 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
         size: "52 MB",
         downloadUrl: "sample_remu1.mp4"
       },
-      
     ];
 
     const categories = ["Semua", "Cinematic", "Relax"];
@@ -1757,19 +2131,7 @@ text-shadow: 0 2px 5px rgba(0,0,0,0.25);
     const activeFilterLabelEl = document.getElementById("activeFilterLabel");
     const filtersEl = document.getElementById("filters");
     const searchInput = document.getElementById("searchInput");
-    // Saat search diklik → sembunyikan carousel
-searchInput.addEventListener("focus", () => {
-  heroCarousel.classList.add("is-hidden");
-});
-
-// Saat fokus lepas dari search
-searchInput.addEventListener("blur", () => {
-  // Kalau kolom search kosong & posisi lagi di "home", boleh munculin lagi
-  if (!searchInput.value.trim()) {
-    checkCarouselVisibility();
-  }
-});
-const countSuffixEl = document.getElementById("countSuffix");
+    const countSuffixEl = document.getElementById("countSuffix");
     const searchBoxWrap = document.getElementById("searchBox");
     const modeLabelEl = document.getElementById("modeLabel");
     const filterInfoEl = document.getElementById("filterInfo");
@@ -1803,6 +2165,8 @@ const countSuffixEl = document.getElementById("countSuffix");
     const playerSizeEl = document.getElementById("playerSize");
     const playerWideBtn = document.getElementById("playerWideBtn");
     const playerPlaylistMainBtn = document.getElementById("playerPlaylistMainBtn");
+    const playerLabelBtn = document.getElementById("playerLabelBtn");
+    const playerArtistBtn = document.getElementById("playerArtistBtn");
 
     const heroCarousel = document.getElementById("heroCarousel"); 
 
@@ -1812,6 +2176,17 @@ const countSuffixEl = document.getElementById("countSuffix");
     const themeLabel = document.getElementById("themeLabel");
 
     const toastEl = document.getElementById("toast");
+
+    // sembunyiin carousel ketika search fokus
+    searchInput.addEventListener("focus", () => {
+      heroCarousel.classList.add("is-hidden");
+    });
+
+    searchInput.addEventListener("blur", () => {
+      if (!searchInput.value.trim()) {
+        checkCarouselVisibility();
+      }
+    });
 
     function loadFromStorage(key, fallback) {
       try {
@@ -1874,193 +2249,163 @@ const countSuffixEl = document.getElementById("countSuffix");
     let carouselInterval;
     
     function renderCarousel() {
-        const historyIds = getHistory().slice(0, 3); // Ambil 3 history terakhir
-        heroCarousel.innerHTML = "";
+      const historyIds = getHistory().slice(0, 3);
+      heroCarousel.innerHTML = "";
+      
+      checkCarouselVisibility();
+
+      if (historyIds.length === 0) return;
+
+      let slidesHTML = "";
+      let indicatorsHTML = `<div class="hero-indicators">`;
+
+      historyIds.forEach((id, index) => {
+        const vid = videos.find(v => v.id === id);
+        if(!vid) return;
+
+        const activeClass = index === 0 ? " active" : "";
         
-        checkCarouselVisibility();
+        slidesHTML += `
+          <div class="hero-slide${activeClass}" data-index="${index}">
+            <img src="${vid.thumb}" class="hero-bg-img" alt="${vid.title}">
+            <div class="hero-overlay-gradient"></div>
+            <div class="hero-content">
+              <div class="hero-meta">
+                <span>${vid.category}</span> • <span>${vid.duration}</span> • <span>${new Date(vid.date).getFullYear()}</span>
+              </div>
+              <h2 class="hero-title">${vid.title}</h2>
+              <div class="hero-desc">${vid.description}</div>
+              <div class="hero-actions">
+                <button class="hero-btn hero-btn-primary" onclick="openPlayerInline(${vid.id}); setPlayerMode('wide')">
+                  ▶ Tonton lagi
+                </button>
+                <button class="hero-btn hero-btn-pink-outline" onclick="goToPlaylistFromCarousel()">
+                  📁 Playlist
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
 
-        if (historyIds.length === 0) return;
+        indicatorsHTML += `<div class="hero-dot${activeClass}" onclick="switchSlide(${index})"></div>`;
+      });
 
-        let slidesHTML = "";
-        let indicatorsHTML = `<div class="hero-indicators">`;
+      indicatorsHTML += `</div>`;
+      heroCarousel.innerHTML = slidesHTML + indicatorsHTML;
 
-        historyIds.forEach((id, index) => {
-            const vid = videos.find(v => v.id === id);
-            if(!vid) return;
-
-            const activeClass = index === 0 ? " active" : "";
-            
-            slidesHTML += `
-                <div class="hero-slide${activeClass}" data-index="${index}">
-                    <img src="${vid.thumb}" class="hero-bg-img" alt="${vid.title}">
-                    <div class="hero-overlay-gradient"></div>
-                    <div class="hero-content">
-                        <div class="hero-meta">
-                            <span>${vid.category}</span> • <span>${vid.duration}</span> • <span>${new Date(vid.date).getFullYear()}</span>
-                        </div>
-                        <h2 class="hero-title">${vid.title}</h2>
-                        <div class="hero-desc">${vid.description}</div>
-                        <div class="hero-actions">
-                            <button class="hero-btn hero-btn-primary" onclick="openPlayerInline(${vid.id}); setPlayerMode('wide')">
-                                ▶ Tonton lagi
-                            </button>
-                            <button class="hero-btn hero-btn-pink-outline" onclick="goToPlaylistFromCarousel()">
-                                📁 Playlist
-                            </button>
-
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            indicatorsHTML += `<div class="hero-dot${activeClass}" onclick="switchSlide(${index})"></div>`;
-        });
-
-        indicatorsHTML += `</div>`;
-        heroCarousel.innerHTML = slidesHTML + indicatorsHTML;
-
-        startCarouselInterval(historyIds.length);
+      startCarouselInterval(historyIds.length);
     }
+
     function goToPlaylistFromCarousel() {
-  // Kalau player lagi kebuka, tutup dulu biar fokus ke list
-  if (playerSection.classList.contains("show")) {
-    closePlayerInline();
-  }
+      if (playerSection.classList.contains("show")) {
+        closePlayerInline();
+      }
 
-  // Pindah ke mode playlist
-  state.mode = "playlist";
-  state.category = "Semua";
-  state.subFilter = null;
-  state.page = 1;
+      state.mode = "playlist";
+      state.category = "Semua";
+      state.subFilter = null;
+      state.page = 1;
 
-  // Update UI filter & grid
-  renderFilters();
-  renderGrid();
+      renderFilters();
+      renderGrid();
+      checkCarouselVisibility();
+    }
 
-  // Carousel otomatis ke-hide karena mode bukan "all"
-  checkCarouselVisibility();
-}
+    function checkCarouselVisibility() {
+      const isPlayerOpen = playerSection.classList.contains("show");
+      const hasHistory = getHistory().length > 0;
 
-function checkCarouselVisibility() {
-  const isPlayerOpen = playerSection.classList.contains("show");
-  const hasHistory = getHistory().length > 0;
+      const isRootHome =
+        state.mode === "all" &&
+        state.category === "Semua" &&
+        !state.subFilter;
 
-  const isRootHome =
-    state.mode === "all" &&
-    state.category === "Semua" &&
-    !state.subFilter;
-
-  if (isRootHome && !isPlayerOpen && hasHistory) {
-    heroCarousel.classList.remove("is-hidden");
-  } else {
-    heroCarousel.classList.add("is-hidden");
-  }
-}
-
-
-
+      if (isRootHome && !isPlayerOpen && hasHistory) {
+        heroCarousel.classList.remove("is-hidden");
+      } else {
+        heroCarousel.classList.add("is-hidden");
+      }
+    }
 
     function switchSlide(index) {
-        const slides = document.querySelectorAll(".hero-slide");
-        const dots = document.querySelectorAll(".hero-dot");
-        
-        if(!slides.length) return;
+      const slides = document.querySelectorAll(".hero-slide");
+      const dots = document.querySelectorAll(".hero-dot");
+      
+      if(!slides.length) return;
 
-        let currentActiveIndex = -1;
-        slides.forEach((slide, i) => {
-            if(slide.classList.contains("active")) {
-                currentActiveIndex = i;
-            }
-        });
-
-        slides.forEach(slide => {
-            slide.classList.remove("active");
-            slide.classList.remove("prev");
-        });
-        dots.forEach(dot => dot.classList.remove("active"));
-
-        slides[index].classList.add("active");
-        dots[index].classList.add("active");
-
-        if(currentActiveIndex !== -1 && currentActiveIndex !== index) {
-             slides[currentActiveIndex].classList.add("prev");
+      let currentActiveIndex = -1;
+      slides.forEach((slide, i) => {
+        if(slide.classList.contains("active")) {
+          currentActiveIndex = i;
         }
+      });
+
+      slides.forEach(slide => {
+        slide.classList.remove("active");
+        slide.classList.remove("prev");
+      });
+      dots.forEach(dot => dot.classList.remove("active"));
+
+      slides[index].classList.add("active");
+      dots[index].classList.add("active");
+
+      if(currentActiveIndex !== -1 && currentActiveIndex !== index) {
+        slides[currentActiveIndex].classList.add("prev");
+      }
     }
 
     function startCarouselInterval(count) {
-        if (carouselInterval) clearInterval(carouselInterval);
-        if (count <= 1) return; 
+      if (carouselInterval) clearInterval(carouselInterval);
+      if (count <= 1) return; 
 
-        let currentIndex = 0;
-        carouselInterval = setInterval(() => {
-            currentIndex = (currentIndex + 1) % count;
-            switchSlide(currentIndex);
-        }, 7000); 
+      let currentIndex = 0;
+      carouselInterval = setInterval(() => {
+        currentIndex = (currentIndex + 1) % count;
+        switchSlide(currentIndex);
+      }, 7000); 
     }
-
-    /* =========================================
-       LOGIC LAINNYA
-       ========================================= */
 
     function renderFilters() {
       filtersEl.innerHTML = "";
 
-      const isSpecialMode = state.mode === "playlist" || state.mode === "history";
-// Sekarang kapsul selalu pakai kategori normal
-const mainCategories = categories;
-
+      const mainCategories = categories;
 
       mainCategories.forEach((cat) => {
         const chip = document.createElement("button");
         chip.className =
           "filter-chip" + (state.category === cat ? " active" : "");
 
-          const isAllChip = cat === "Semua";
-let label;
+        const isAllChip = cat === "Semua";
+        let label;
 
-// Kalau kapsul "Semua", labelnya ikut mode
-if (isAllChip) {
-  if (state.mode === "playlist") {
-    label = "Playlist";
-  } else if (state.mode === "history") {
-    label = "History";
-  } else {
-    label = "Semua";
-  }
-} else {
-  // Selain itu pakai mapping biasa (Label / Artis / dst)
-  label = categoryLabelMap[cat] || cat;
-}
+        if (isAllChip) {
+          if (state.mode === "playlist") {
+            label = "Playlist";
+          } else if (state.mode === "history") {
+            label = "History";
+          } else {
+            label = "Semua";
+          }
+        } else {
+          label = categoryLabelMap[cat] || cat;
+        }
 
-chip.textContent = label;
+        chip.textContent = label;
 
-chip.addEventListener("click", () => {
-  if (cat === "Semua") {
-    // Kalau lagi di mode ALL → boleh balik ke home
-    if (state.mode === "all") {
-      goHome();
-    }
-    // Kalau mode = playlist / history → jangan lakukan apa-apa
-    return;
-  }
+        chip.addEventListener("click", () => {
+          if (cat === "Semua") {
+            if (state.mode === "all") {
+              goHome();
+            }
+            return;
+          }
 
-  // Selain "Semua" tetap normal:
-  state.category = cat;
-  state.subFilter = null;
-  state.page = 1;
-  renderFilters();
-  renderGrid();
-});
-
-
-
-chip.addEventListener("click", () => {
-  state.category = cat;
-  state.subFilter = null;
-  state.page = 1;
-  renderFilters();
-  renderGrid();
-});
+          state.category = cat;
+          state.subFilter = null;
+          state.page = 1;
+          renderFilters();
+          renderGrid();
+        });
 
         filtersEl.appendChild(chip);
       });
@@ -2301,7 +2646,6 @@ chip.addEventListener("click", () => {
       if (searchBoxWrap) searchBoxWrap.style.display = "flex";
       if (sortWrapper) sortWrapper.style.display = "inline-flex";
   
-
       checkCarouselVisibility();
       renderGrid();
     }
@@ -2343,46 +2687,23 @@ chip.addEventListener("click", () => {
       renderFilters();
       renderGrid();
     }
-    function toggleHistoryMode() {
-  if (playerSection.classList.contains("show")) {
-    closePlayerInline();
-  }
 
-  if (state.mode === "history") {
-    state.mode = "all";
-  } else {
-    state.mode = "history";
-    state.category = "Semua";
-    state.subFilter = null;
-  }
-  state.page = 1;
+    function goHome() {
+      if (playerSection.classList.contains("show")) {
+        closePlayerInline();
+      }
 
-  checkCarouselVisibility();
-  renderFilters();
-  renderGrid();
-}
+      state.mode = "all";
+      state.category = "Semua";
+      state.subFilter = null;
+      state.page = 1;
 
-// ← TEMPATKAN DI SINI
-function goHome() {
-  // Tutup player kalau lagi kebuka
-  if (playerSection.classList.contains("show")) {
-    closePlayerInline();
-  }
+      renderFilters();
+      renderGrid();
+      checkCarouselVisibility();
 
-  // Balik ke mode utama
-  state.mode = "all";
-  state.category = "Semua";
-  state.subFilter = null;
-  state.page = 1;
-
-  renderFilters();
-  renderGrid();
-  checkCarouselVisibility();
-
-  // Scroll ke atas biar rapi
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
     playlistBtn.addEventListener("click", togglePlaylistMode);
     historyBtn.addEventListener("click", toggleHistoryMode);
@@ -2405,7 +2726,6 @@ function goHome() {
       showToast(message);
     }
 
-    // Pastikan video masuk playlist lalu pindah ke folder playlist
     function goToPlaylistFolder(videoId) {
       if (typeof videoId === "number") {
         let pl = getPlaylist();
@@ -2416,13 +2736,11 @@ function goHome() {
         }
       }
 
-      // Pindah ke mode playlist (folder)
       state.mode = "playlist";
       state.category = "Semua";
       state.subFilter = null;
       state.page = 1;
 
-      // Tutup player kalau kebetulan lagi kebuka
       if (playerSection.classList.contains("show")) {
         closePlayerInline();
       } else {
@@ -2432,7 +2750,6 @@ function goHome() {
       }
     }
 
-    // Update tombol playlist utama di bawah download
     function updatePlayerPlaylistButton(videoId) {
       const pl = getPlaylist();
       const inPlaylist = pl.includes(videoId);
@@ -2483,9 +2800,9 @@ function goHome() {
 
       countTextEl.textContent = filteredLabels.length;
 
-if (countSuffixEl) {
-  countSuffixEl.textContent = " folder ditemukan di label";
-}
+      if (countSuffixEl) {
+        countSuffixEl.textContent = " folder di label";
+      }
 
       if (filteredLabels.length === 0) {
         emptyEl.innerHTML = "Tidak ada label yang cocok dengan pencarian.";
@@ -2528,13 +2845,9 @@ if (countSuffixEl) {
         gridEl.appendChild(card);
       });
 
-gridEl.classList.remove("list-view");
-
-
-      // Cek lagi apakah carousel perlu tampil atau disembunyikan
+      gridEl.classList.remove("list-view");
       checkCarouselVisibility();
     }
-
 
     function renderArtistSelection() {
       const baseList = getModeBaseList();
@@ -2550,9 +2863,10 @@ gridEl.classList.remove("list-view");
       paginationWrapEl.style.display = "none";
 
       countTextEl.textContent = filteredArtists.length;
-if (countSuffixEl) {
-  countSuffixEl.textContent = " artis ditemukan di folder";
-}
+
+      if (countSuffixEl) {
+        countSuffixEl.textContent = " folder di artis";
+      }
 
       if (filteredArtists.length === 0) {
         emptyEl.innerHTML = "Tidak ada artis yang cocok dengan pencarian.";
@@ -2595,13 +2909,9 @@ if (countSuffixEl) {
         gridEl.appendChild(card);
       });
 
-   gridEl.classList.remove("list-view");
-
-
-      // Cek lagi apakah carousel perlu tampil atau disembunyikan
+      gridEl.classList.remove("list-view");
       checkCarouselVisibility();
     }
-
 
     function renderPagination(totalItems) {
       const perPage = state.perPage;
@@ -2656,17 +2966,14 @@ if (countSuffixEl) {
       updateModeButtons();
 
       if (state.category === "Cinematic" && !state.subFilter) {
-    // Folder berdasarkan LABEL
-    renderLabelSelection();
-    return;
-  }
+        renderLabelSelection();
+        return;
+      }
 
-  if (state.category === "Relax" && !state.subFilter) {
-    // Folder berdasarkan ARTIS
-    renderArtistSelection();
-    return;
-  }
-
+      if (state.category === "Relax" && !state.subFilter) {
+        renderArtistSelection();
+        return;
+      }
 
       const baseList = getModeBaseList();
       const list = getFilteredSortedVideos();
@@ -2675,9 +2982,22 @@ if (countSuffixEl) {
       countTextEl.textContent = list.length;
 
       if (countSuffixEl) {
-  countSuffixEl.textContent = " video ditemukan";
-}
+        let suffix = " video";
 
+        if (state.subFilter && state.mode === "all") {
+          if (state.subFilter.type === "label") {
+            suffix += ` di label ${state.subFilter.value}`;
+          } else if (state.subFilter.type === "artist") {
+            suffix += ` di artis ${state.subFilter.value}`;
+          }
+        } else if (state.mode === "playlist") {
+          suffix += " di Playlist";
+        } else if (state.mode === "history") {
+          suffix += " di History";
+        }
+
+        countSuffixEl.textContent = suffix;
+      }
 
       if (baseList.length === 0) {
         let msg = "Tidak ada video untuk mode ini.";
@@ -2765,8 +3085,7 @@ if (countSuffixEl) {
         }
       });
 
- gridEl.classList.remove("list-view");
-
+      gridEl.classList.remove("list-view");
     }
 
     searchInput.addEventListener("input", (e) => {
@@ -2815,9 +3134,9 @@ if (countSuffixEl) {
       setPlayerMode(next);
     });
 
-   function openPlayerInline(id) {
-  const video = videos.find((v) => v.id === id);
-  if (!video) return;
+    function openPlayerInline(id) {
+      const video = videos.find((v) => v.id === id);
+      if (!video) return;
 
       playerSection.dataset.currentId = id;
       playerTitleEl.textContent = video.title;
@@ -2832,17 +3151,34 @@ if (countSuffixEl) {
       playerActorEl.textContent = video.actor || "-";
       playerActressEl.textContent = video.actress || "-";
 
+      // 🔥 isi tombol hashtag
+      if (playerLabelBtn) {
+        if (video.label) {
+          playerLabelBtn.textContent = `#${video.label}`;
+          playerLabelBtn.style.display = "inline-flex";
+        } else {
+          playerLabelBtn.style.display = "none";
+        }
+      }
+
+      if (playerArtistBtn) {
+        if (video.actress) {
+          playerArtistBtn.textContent = `#${video.actress}`;
+          playerArtistBtn.style.display = "inline-flex";
+        } else {
+          playerArtistBtn.style.display = "none";
+        }
+      }
+
       playerSizeEl.textContent = video.size ? video.size : "";
       let downloadUrl = video.downloadUrl || video.src || "";
 
       playerSection.dataset.currentId = id;
-  playerSection.classList.add("show");
-  playerSection.classList.remove("wide", "cinema");
-  body.classList.remove("cinema-mode");
-  playerSection.dataset.mode = "normal";
-  updateWideButton();
-
-  
+      playerSection.classList.add("show");
+      playerSection.classList.remove("wide", "cinema");
+      body.classList.remove("cinema-mode");
+      playerSection.dataset.mode = "normal";
+      updateWideButton();
 
       if (downloadUrl) {
         playerDownloadEl.href = downloadUrl;
@@ -2884,13 +3220,6 @@ if (countSuffixEl) {
       updatePlayerPlaylistButton(id);
       addToHistory(id);
 
-      playerSection.classList.add("show");
-      
-      playerSection.classList.remove("wide", "cinema");
-      body.classList.remove("cinema-mode");
-      playerSection.dataset.mode = "normal";
-      updateWideButton();
-
       checkCarouselVisibility();
       renderGrid();
 
@@ -2901,7 +3230,6 @@ if (countSuffixEl) {
 
       if (searchBoxWrap) searchBoxWrap.style.display = "none";
       if (sortWrapper) sortWrapper.style.display = "none";
-      if (viewToggle) viewToggle.style.display = "none";
 
       window.scrollTo({
         top: 0,
@@ -2911,7 +3239,6 @@ if (countSuffixEl) {
 
     playerCloseBtn.addEventListener("click", closePlayerInline);
 
-    // Klik tombol playlist utama di bawah download
     playerPlaylistMainBtn.addEventListener("click", () => {
       const id = parseInt(playerSection.dataset.currentId || "-1", 10);
       if (!id || id === -1) return;
@@ -2931,6 +3258,22 @@ if (countSuffixEl) {
       closePlayerInline();
     });
 
+    // 🔥 tombol hashtag label
+    if (playerLabelBtn) {
+      playerLabelBtn.addEventListener("click", () => {
+        const value = playerLabelEl.textContent.trim();
+        if (!value || value === "-") return;
+
+        state.mode = "all";
+        state.category = "Cinematic";
+        state.subFilter = { type: "label", value };
+        state.page = 1;
+
+        renderFilters();
+        closePlayerInline();
+      });
+    }
+
     playerActressEl.addEventListener("click", () => {
       const value = playerActressEl.textContent.trim();
       if (!value || value === "-") return;
@@ -2943,6 +3286,22 @@ if (countSuffixEl) {
       renderFilters();
       closePlayerInline();
     });
+
+    // 🔥 tombol hashtag artis
+    if (playerArtistBtn) {
+      playerArtistBtn.addEventListener("click", () => {
+        const value = playerActressEl.textContent.trim();
+        if (!value || value === "-") return;
+
+        state.mode = "all";
+        state.category = "Relax";
+        state.subFilter = { type: "artist", value };
+        state.page = 1;
+
+        renderFilters();
+        closePlayerInline();
+      });
+    }
 
     document.addEventListener("keydown", (e) => {
       const isOpen = playerSection.classList.contains("show");
