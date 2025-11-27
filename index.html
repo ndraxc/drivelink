@@ -2175,6 +2175,25 @@
         size: "52 MB",
         downloadUrl: "sample_remu1.mp4"
       },
+        /* 🔥 ARTIS BARU TAMBAHAN BUAT TEST */
+  {
+    id: 6,
+    title: "Yua Mikami - Golden Hour Portrait",
+    duration: "06:30",
+    durationSec: 6 * 60 + 30,
+    category: "Relax", // penting: masuk ke tab ARTIS (Relax)
+    thumb: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=800",
+    src: "sample_yua1.mp4",
+    date: "2025-09-10",
+    description: "Portrait golden hour dengan tone hangat dan bokeh lembut di belakang.",
+    kode: "YUA-001",
+    studio: "Sunset Studio",
+    label: "START",
+    actor: "—",
+    actress: "Yua Mikami",
+    size: "70 MB",
+    downloadUrl: "sample_yua1.mp4"
+  }
     ];
 
     const categories = ["Semua", "Cinematic", "Relax"];
@@ -2332,27 +2351,27 @@
     let slideDomElements = []; // 🔥 Menyimpan elemen DOM slide
 
     // ====== CAROUSEL AUTO DELAY UTILS ======
-    function clearCarouselTimers() {
-      if (carouselInterval) {
-        clearInterval(carouselInterval);
-        carouselInterval = null;
-      }
-      if (carouselResumeTimeout) {
-        clearTimeout(carouselResumeTimeout);
-        carouselResumeTimeout = null;
-      }
-    }
+function clearCarouselTimers() {
+  if (carouselInterval) {
+    clearInterval(carouselInterval);
+    carouselInterval = null;
+  }
+  if (carouselResumeTimeout) {
+    clearTimeout(carouselResumeTimeout);
+    carouselResumeTimeout = null;
+  }
+}
 
-    function pauseAutoCarousel() {
-      // stop auto-slide dulu
-      clearCarouselTimers();
-      if (heroSlideCount <= 1) return;
+function pauseAutoCarousel() {
+  clearCarouselTimers();
+  if (heroSlideCount <= 1) return;
 
-      // start lagi setelah 15 detik (bisa kamu ganti)
-      carouselResumeTimeout = setTimeout(() => {
-        startCarouselInterval(heroSlideCount);
-      }, 15000);
-    }
+  // mulai lagi setelah 15 detik setelah user geser
+  carouselResumeTimeout = setTimeout(() => {
+    startCarouselInterval(heroSlideCount);
+  }, 15000);
+}
+
     // =======================================
 
     // 🔀 acak semua video dalam folder label/artis
@@ -2374,13 +2393,11 @@
   heroCarousel.innerHTML = "";
 
   const isFolderLabel =
-    state.mode === "all" &&
     state.category === "Cinematic" &&
     state.subFilter &&
     state.subFilter.type === "label";
 
   const isFolderArtist =
-    state.mode === "all" &&
     state.category === "Relax" &&
     state.subFilter &&
     state.subFilter.type === "artist";
@@ -2392,7 +2409,7 @@
   let folderName = "";
   let totalFolderVideos = 0;
 
-  // 🎯 MODE FOLDER LABEL / ARTIS
+  // 📂 MODE FOLDER LABEL / ARTIS (baik dari all / playlist / history)
   if (isFolderLabel || isFolderArtist) {
     const target = (state.subFilter.value || "").toLowerCase();
     const folderVideos = baseList
@@ -2408,11 +2425,11 @@
       folderKind = isFolderLabel ? "Label" : "Artis";
       folderName = state.subFilter.value;
       totalFolderVideos = folderVideos.length;
-      slides = folderVideos.slice(0, 3); // maksimal 3 slide
+      slides = folderVideos.slice(0, 3);
     }
   }
 
-  // 🏠 MODE HOME (HISTORY)
+  // 🏠 MODE HOME HISTORY (kalau bukan folder label/artis)
   if (contextType === "history") {
     const historyIds = getHistory().slice(0, 3);
     slides = historyIds
@@ -2420,7 +2437,7 @@
       .filter(Boolean);
   }
 
-  // Kalau nggak ada slide → matikan carousel & timer
+  // Kalau nggak ada bahan slide → matikan carousel + timer
   if (!slides.length) {
     heroCarousel.classList.add("is-hidden");
     clearCarouselTimers();
@@ -2506,7 +2523,6 @@
   heroSlideCount = slideDomElements.length;
   currentSlideIndex = 0;
 
-  // mulai auto slide (looping) untuk semua konteks
   startCarouselInterval(heroSlideCount);
 }
 
@@ -2530,22 +2546,22 @@
       const isSearchFocused = document.activeElement === searchInput;
       const hasHistory = getHistory().length > 0;
 
-      const isRootHome =
-        state.mode === "all" &&
-        state.category === "Semua" &&
-        !state.subFilter;
+     const isRootHome =
+  state.mode === "all" &&
+  state.category === "Semua" &&
+  !state.subFilter;
 
-      const isFolderLabel =
-        state.mode === "all" &&
-        state.category === "Cinematic" &&
-        state.subFilter &&
-        state.subFilter.type === "label";
+// 🔥 Folder label/artis bisa di semua mode
+const isFolderLabel =
+  state.category === "Cinematic" &&
+  state.subFilter &&
+  state.subFilter.type === "label";
 
-      const isFolderArtist =
-        state.mode === "all" &&
-        state.category === "Relax" &&
-        state.subFilter &&
-        state.subFilter.type === "artist";
+const isFolderArtist =
+  state.category === "Relax" &&
+  state.subFilter &&
+  state.subFilter.type === "artist";
+
 
       let hasFolderVideos = false;
       if (isFolderLabel || isFolderArtist) {
@@ -2577,20 +2593,20 @@
       }
     }
 
-    // 🔁 auto slide, pakai index global
-    function startCarouselInterval(count) {
-      clearCarouselTimers(); // 🔥 pastikan nggak dobel interval
-      if (count <= 1) return; 
+function startCarouselInterval(count) {
+  clearCarouselTimers();
+  if (count <= 1) return;
 
-      carouselInterval = setInterval(() => {
-        if (heroSlideCount <= 1) return;
-        const nextIndex = (currentSlideIndex + 1) % heroSlideCount;
-        switchSlide(nextIndex, "next");
-      }, 7000); 
-    }
+  carouselInterval = setInterval(() => {
+    if (heroSlideCount <= 1) return;
+    const nextIndex = (currentSlideIndex + 1) % heroSlideCount; // 🔁 loop
+    switchSlide(nextIndex, "next");
+  }, 7000);
+}
+
 
     // switch slide (dipakai auto & user)
-  function switchSlide(targetIndex, direction = null) {
+ function switchSlide(targetIndex, direction = null) {
   const slides = slideDomElements;
   const dots = document.querySelectorAll(".hero-dot");
 
@@ -2600,12 +2616,12 @@
   const currentIndex = currentSlideIndex;
   if (targetIndex === currentIndex) return;
 
-  // Tentukan arah default kalau nggak dikirim
+  // Tentukan arah kalau nggak dikasih
   if (!direction) {
     if (currentIndex === slides.length - 1 && targetIndex === 0) {
-      direction = "next"; // dari terakhir ke pertama
+      direction = "next"; // terakhir → pertama
     } else if (currentIndex === 0 && targetIndex === slides.length - 1) {
-      direction = "prev"; // dari pertama ke terakhir
+      direction = "prev"; // pertama → terakhir
     } else {
       direction = targetIndex > currentIndex ? "next" : "prev";
     }
@@ -2614,15 +2630,15 @@
   const currentSlide = slides[currentIndex];
   const nextSlide = slides[targetIndex];
 
-  // Matikan transisi dulu
+  // Matikan transisi sementara untuk set posisi awal
   slides.forEach(slide => slide.classList.add("no-transition"));
   slides.forEach(slide => slide.classList.remove("prev", "active", "coming-from-left", "coming-from-right"));
 
-  // Set posisi awal next slide
+  // posisi awal next slide
   if (direction === "next") {
-    nextSlide.classList.add("coming-from-right"); // datang dari kanan
+    nextSlide.classList.add("coming-from-right"); // masuk dari kanan
   } else {
-    nextSlide.classList.add("coming-from-left");  // datang dari kiri
+    nextSlide.classList.add("coming-from-left");  // masuk dari kiri
   }
 
   // Aktifkan transisi untuk current & next
@@ -2654,7 +2670,7 @@
 
 function userSwitchSlide(targetIndex) {
   switchSlide(targetIndex);
-  pauseAutoCarousel(); // jeda auto setelah user interaksi
+  pauseAutoCarousel(); // tunda auto setelah user interaksi
 }
 
 
@@ -2663,30 +2679,29 @@ function userSwitchSlide(targetIndex) {
     let touchEndX = 0;
     let isTouchingCarousel = false;
 
-    function handleCarouselTouchStart(e) {
-      if (!heroCarousel) return;
-      isTouchingCarousel = true;
-      const point = e.touches ? e.touches[0] : e;
-      touchStartX = point.clientX;
-      touchEndX = point.clientX;
-      // 🔥 Nonaktifkan auto-slide saat sentuhan dimulai
-      clearCarouselTimers();
-    }
+function handleCarouselTouchStart(e) {
+  if (!heroCarousel) return;
+  isTouchingCarousel = true;
+  const point = e.touches ? e.touches[0] : e;
+  touchStartX = point.clientX;
+  touchEndX = point.clientX;
+  clearCarouselTimers(); // stop auto saat user sentuh
+}
 
-    function handleCarouselTouchMove(e) {
-      if (!isTouchingCarousel) return;
-      const point = e.touches ? e.touches[0] : e;
-      touchEndX = point.clientX;
-    }
+function handleCarouselTouchMove(e) {
+  if (!isTouchingCarousel) return;
+  const point = e.touches ? e.touches[0] : e;
+  touchEndX = point.clientX;
+}
 
-  function handleCarouselTouchEnd() {
+function handleCarouselTouchEnd() {
   if (!isTouchingCarousel) return;
   const deltaX = touchEndX - touchStartX;
   const threshold = 40;
 
   if (Math.abs(deltaX) > threshold && heroSlideCount > 1) {
     if (deltaX < 0) {
-      // swipe kiri → next (loop ke awal)
+      // swipe kiri → NEXT (loop ke awal kalau di terakhir)
       let nextIndex = currentSlideIndex + 1;
       let direction = "next";
       if (nextIndex >= heroSlideCount) {
@@ -2694,7 +2709,7 @@ function userSwitchSlide(targetIndex) {
       }
       switchSlide(nextIndex, direction);
     } else {
-      // swipe kanan → prev (loop ke akhir)
+      // swipe kanan → PREV (loop ke akhir kalau di paling awal)
       let prevIndex = currentSlideIndex - 1;
       let direction = "prev";
       if (prevIndex < 0) {
@@ -2704,7 +2719,7 @@ function userSwitchSlide(targetIndex) {
     }
     pauseAutoCarousel();
   } else {
-    // nggak jadi swipe → lanjut auto slide
+    // nggak cukup jauh → lanjutin auto slide
     startCarouselInterval(heroSlideCount);
   }
 
@@ -2713,11 +2728,12 @@ function userSwitchSlide(targetIndex) {
   touchEndX = 0;
 }
 
-    if (heroCarousel) {
-      heroCarousel.addEventListener("touchstart", handleCarouselTouchStart, { passive: true });
-      heroCarousel.addEventListener("touchmove", handleCarouselTouchMove, { passive: true });
-      heroCarousel.addEventListener("touchend", handleCarouselTouchEnd);
-    }
+if (heroCarousel) {
+  heroCarousel.addEventListener("touchstart", handleCarouselTouchStart, { passive: true });
+  heroCarousel.addEventListener("touchmove", handleCarouselTouchMove, { passive: true });
+  heroCarousel.addEventListener("touchend", handleCarouselTouchEnd);
+}
+
 
     function renderFilters() {
       filtersEl.innerHTML = "";
