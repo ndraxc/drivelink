@@ -278,35 +278,66 @@
       pointer-events: none;
     }
 
-    .hero-slide {
-      position: absolute;
-      inset: 0;
-      /* 🔥 PENTING: Ubah transisi transform biar transisi loop bisa di-hack */
-      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
-      opacity: 0;
-      transform: translateX(100%);
-      pointer-events: none;
-      z-index: 1;
-    }
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Default: Standby di KANAN (100%) */
+  transform: translateX(100%);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+/* 🔥 helper class arah slide */
+.hero-slide.left {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.hero-slide.right {
+  transform: translateX(100%);
+  opacity: 0;
+}
 
     /* 💡 Tambahkan transisi cepat untuk perpindahan instan (saat loop) */
     .hero-slide.no-transition {
         transition: none !important;
     }
 
-    .hero-slide.active {
-      opacity: 1;
-      transform: translateX(0);
-      pointer-events: auto;
-      z-index: 2;
-    }
-
+   /* Slide Aktif (Di Tengah) */
+.hero-slide.active {
+  transform: translateX(0);
+  opacity: 1;
+  z-index: 2;
+  pointer-events: auto;
+}
     .hero-slide.prev {
       transform: translateX(-100%);
       opacity: 0;
       z-index: 1;
     }
+/* Slide yang Keluar ke KIRI */
+.hero-slide.exit-left {
+  transform: translateX(-100%);
+  opacity: 0;
+  z-index: 1;
+}
 
+/* Helper: Paksa slide standby di KIRI dulu (untuk tombol Prev) */
+.hero-slide.from-left {
+  transform: translateX(-100%) !important;
+  opacity: 0;
+  transition: none !important; /* Matikan animasi saat teleport */
+}
+
+/* Helper: Paksa slide standby di KANAN dulu (untuk tombol Next / Loop) */
+.hero-slide.from-right {
+  transform: translateX(100%) !important;
+  opacity: 0;
+  transition: none !important;
+}
     /* 🔥 Tambahan: Posisi untuk slide yang datang dari kiri (saat swipe prev) */
     .hero-slide.coming-from-left {
         transform: translateX(-100%);
@@ -2176,26 +2207,25 @@
         downloadUrl: "sample_remu1.mp4"
       },
         /* 🔥 ARTIS BARU TAMBAHAN BUAT TEST */
-  {
+ {
     id: 6,
-    title: "Yua Mikami - Golden Hour Portrait",
-    duration: "06:30",
-    durationSec: 6 * 60 + 30,
-    category: "Relax", // penting: masuk ke tab ARTIS (Relax)
-    thumb: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=800",
-    src: "sample_yua1.mp4",
-    date: "2025-09-10",
-    description: "Portrait golden hour dengan tone hangat dan bokeh lembut di belakang.",
-    kode: "YUA-001",
-    studio: "Sunset Studio",
+    title: "Remu Suzumori - Studio Chill Session",
+    duration: "05:20",
+    durationSec: 5 * 60 + 20,
+    category: "Relax", // penting: biar tetap masuk tab ARTIS (Relax)
+    thumb: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=800",
+    src: "sample_remu2.mp4",
+    date: "2025-09-05",
+    description: "Session santai di studio dengan vibe hangat dan cozy ala Remu.",
+    kode: "RMU-002",
+    studio: "Soft Studio",
     label: "START",
     actor: "—",
-    actress: "Yua Mikami",
-    size: "70 MB",
-    downloadUrl: "sample_yua1.mp4"
+    actress: "Remu Suzumori", // 🔥 sama, biar kebaca 1 folder artis
+    size: "64 MB",
+    downloadUrl: "sample_remu2.mp4"
   }
-    ];
-
+];
     const categories = ["Semua", "Cinematic", "Relax"];
 
     const categoryLabelMap = {
@@ -2610,68 +2640,80 @@ function startCarouselInterval(count) {
   const slides = slideDomElements;
   const dots = document.querySelectorAll(".hero-dot");
 
-  if (!slides.length) return;
-  if (targetIndex < 0 || targetIndex >= slides.length) return;
+  if (!slides || !slides.length) return;
+  
+  // Handle Loop Index
+  if (targetIndex < 0) targetIndex = slides.length - 1;
+  if (targetIndex >= slides.length) targetIndex = 0;
 
   const currentIndex = currentSlideIndex;
   if (targetIndex === currentIndex) return;
 
-  // Tentukan arah kalau nggak dikasih
+  const currentSlide = slides[currentIndex];
+  const nextSlide = slides[targetIndex];
+
+  // 1️⃣ Tentukan Arah (PENTING)
   if (!direction) {
+    // Kalau index target lebih besar, anggap NEXT. 
+    // KECUALI kalau dari Akhir ke Awal (Looping), tetap anggap NEXT biar flow-nya nyambung ke kanan.
     if (currentIndex === slides.length - 1 && targetIndex === 0) {
-      direction = "next"; // terakhir → pertama
-    } else if (currentIndex === 0 && targetIndex === slides.length - 1) {
-      direction = "prev"; // pertama → terakhir
-    } else {
+      direction = "next";
+    } 
+    // Kalau dari Awal ke Akhir (Mundur), anggap PREV
+    else if (currentIndex === 0 && targetIndex === slides.length - 1) {
+      direction = "prev";
+    } 
+    else {
       direction = targetIndex > currentIndex ? "next" : "prev";
     }
   }
 
-  const currentSlide = slides[currentIndex];
-  const nextSlide = slides[targetIndex];
+  // 2️⃣ Reset semua slide lain yang gak terlibat biar bersih
+  slides.forEach((s, i) => {
+    if (i !== currentIndex && i !== targetIndex) {
+      s.className = "hero-slide"; // Balikin ke standby kanan
+    }
+  });
 
-  // Matikan transisi sementara untuk set posisi awal
-  slides.forEach(slide => slide.classList.add("no-transition"));
-  slides.forEach(slide => slide.classList.remove("prev", "active", "coming-from-left", "coming-from-right"));
-
-  // posisi awal next slide
+  // 3️⃣ LOGIKA PERGERAKAN
   if (direction === "next") {
-    nextSlide.classList.add("coming-from-right"); // masuk dari kanan
+    // === GERAK MAJU (Geser ke Kiri) ===
+    
+    // Slide BARU: Pastikan dia start dari KANAN (default)
+    // Kita reset class-nya biar yakin dia di posisi 100% tanpa animasi aneh
+    nextSlide.className = "hero-slide from-right"; 
+    void nextSlide.offsetWidth; // Force Reflow (Penting!)
+    
+    // Jalankan Animasi
+    nextSlide.className = "hero-slide active"; // Masuk ke tengah
+    currentSlide.className = "hero-slide exit-left"; // Slide lama buang ke kiri
+    
   } else {
-    nextSlide.classList.add("coming-from-left");  // masuk dari kiri
+    // === GERAK MUNDUR (Geser ke Kanan) ===
+    
+    // Slide BARU: Harus teleport dulu ke KIRI (-100%)
+    nextSlide.className = "hero-slide from-left";
+    void nextSlide.offsetWidth; // Force Reflow (Penting!)
+    
+    // Jalankan Animasi
+    nextSlide.className = "hero-slide active"; // Masuk ke tengah
+    // Slide lama biarkan kembali ke posisi default (100% / Kanan)
+    // Karena default CSS .hero-slide itu translateX(100%), jadi cukup hapus 'active'
+    currentSlide.className = "hero-slide"; 
   }
 
-  // Aktifkan transisi untuk current & next
-  currentSlide.classList.remove("no-transition");
-  nextSlide.classList.remove("no-transition");
-
-  currentSlide.classList.add("active");
-  void nextSlide.offsetWidth; // force reflow
-
-  // Current keluar
-  if (direction === "next") {
-    currentSlide.classList.add("prev"); // geser ke kiri (-100%)
-  } else {
-    currentSlide.classList.remove("prev"); // balik ke kanan (100%)
-  }
-  currentSlide.classList.remove("active");
-
-  // Next masuk
-  nextSlide.classList.add("active");
-  nextSlide.classList.remove("coming-from-left", "coming-from-right");
-
-  // Update dots
+  // 4️⃣ Update Dots
   dots.forEach((dot, i) => {
     dot.classList.toggle("active", i === targetIndex);
   });
 
   currentSlideIndex = targetIndex;
 }
-
 function userSwitchSlide(targetIndex) {
   switchSlide(targetIndex);
-  pauseAutoCarousel(); // tunda auto setelah user interaksi
+  pauseAutoCarousel(); // tetap tunda auto kalau user interaksi
 }
+
 
 
     // ====== SWIPE GESTURE HERO CAROUSEL ======
@@ -2701,25 +2743,18 @@ function handleCarouselTouchEnd() {
 
   if (Math.abs(deltaX) > threshold && heroSlideCount > 1) {
     if (deltaX < 0) {
-      // swipe kiri → NEXT (loop ke awal kalau di terakhir)
+      // swipe kiri → NEXT
       let nextIndex = currentSlideIndex + 1;
-      let direction = "next";
-      if (nextIndex >= heroSlideCount) {
-        nextIndex = 0;
-      }
-      switchSlide(nextIndex, direction);
+      if (nextIndex >= heroSlideCount) nextIndex = 0; // loop ke awal
+      switchSlide(nextIndex, "next");
     } else {
-      // swipe kanan → PREV (loop ke akhir kalau di paling awal)
+      // swipe kanan → PREV
       let prevIndex = currentSlideIndex - 1;
-      let direction = "prev";
-      if (prevIndex < 0) {
-        prevIndex = heroSlideCount - 1;
-      }
-      switchSlide(prevIndex, direction);
+      if (prevIndex < 0) prevIndex = heroSlideCount - 1; // loop ke akhir
+      switchSlide(prevIndex, "prev");
     }
     pauseAutoCarousel();
   } else {
-    // nggak cukup jauh → lanjutin auto slide
     startCarouselInterval(heroSlideCount);
   }
 
@@ -2727,6 +2762,8 @@ function handleCarouselTouchEnd() {
   touchStartX = 0;
   touchEndX = 0;
 }
+
+
 
 if (heroCarousel) {
   heroCarousel.addEventListener("touchstart", handleCarouselTouchStart, { passive: true });
