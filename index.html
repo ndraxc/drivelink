@@ -21,8 +21,8 @@
       --border-light: rgba(0, 0, 0, 0.453);
       --radius-lg: 18px;
       --radius-md: 12px;
-      --radius-pill: 9px;   /* kapsul agak ngotak */
-      --radius-btn: 12px;    /* radius tombol hero */
+      --radius-pill: 9px; 
+      --radius-btn: 12px; 
       --card-bg: #202020;
       --chip-bg: #1d1d21;
       --overlay-grad: linear-gradient(to top, #000000aa, #e0000000);
@@ -104,8 +104,8 @@
     }
 
     /* =======================
-       SPACE BACKGROUND LAYER
-       ======================= */
+        SPACE BACKGROUND LAYER
+        ======================= */
     .space-bg {
       position: fixed;
       inset: 0;
@@ -250,8 +250,8 @@
     }
 
     /* =========================================
-       HERO CAROUSEL SECTION
-       ========================================= */
+        HERO CAROUSEL SECTION
+        ========================================= */
     .hero-section {
       position: relative;
       width: 100%;
@@ -268,6 +268,7 @@
         height 0.35s ease,
         opacity 0.25s ease,
         margin-bottom 0.35s ease;
+      touch-action: pan-y; /* biar swipe horizontal lebih halus */
     }
 
     .hero-section.is-hidden {
@@ -280,11 +281,17 @@
     .hero-slide {
       position: absolute;
       inset: 0;
+      /* 🔥 PENTING: Ubah transisi transform biar transisi loop bisa di-hack */
       transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
       opacity: 0;
       transform: translateX(100%);
       pointer-events: none;
       z-index: 1;
+    }
+
+    /* 💡 Tambahkan transisi cepat untuk perpindahan instan (saat loop) */
+    .hero-slide.no-transition {
+        transition: none !important;
     }
 
     .hero-slide.active {
@@ -298,6 +305,20 @@
       transform: translateX(-100%);
       opacity: 0;
       z-index: 1;
+    }
+
+    /* 🔥 Tambahan: Posisi untuk slide yang datang dari kiri (saat swipe prev) */
+    .hero-slide.coming-from-left {
+        transform: translateX(-100%);
+        opacity: 0;
+        z-index: 1;
+    }
+    
+    /* 🔥 Tambahan: Posisi untuk slide yang datang dari kanan (saat swipe next) */
+    .hero-slide.coming-from-right {
+        transform: translateX(100%);
+        opacity: 0;
+        z-index: 1;
     }
 
     .hero-bg-img {
@@ -724,19 +745,19 @@
 }
 @media (max-width: 480px) {
   .player-media {
-    margin-top: 12px !important;   /* geserin video agak ke bawah */
+    margin-top: 12px !important;    /* geserin video agak ke bawah */
   }
 }
 @media (max-width: 480px) {
   .player-extra {
     margin-top: -1px !important;  /* naik dikit */
   }
-    #filterInfo {
+      #filterInfo {
     display: none !important;
   }
 }
 
- @media (max-width: 480px) {
+  @media (max-width: 480px) {
   .player-extra {
     flex-direction: column !important; /* 🔥 selalu vertikal, 2 baris */
     align-items: stretch;
@@ -744,10 +765,10 @@
     gap: 8px;
   }
   .tag-btn {
-    padding: 7px 8px!important;      /* biar kotaknya sama gepeng */
+    padding: 7px 8px!important;       /* biar kotaknya sama gepeng */
     gap: 3px;
     font-size: 10px!important;        /* ukuran text sama */
-    border-radius: 5px!important;    /* curve sama kayak download/playlist */
+    border-radius: 5px!important;     /* curve sama kayak download/playlist */
   }
   .player-extra-row {
     display: flex;
@@ -1041,7 +1062,19 @@
       opacity: 0.6;
       stroke-linecap: round;
     }
+@media (max-width: 480px) {
+  .hero-dot,
+  .nav-dot,
+  .slide-dot {
+    background-color: #555 !important; /* abu seperti dark mode */
+  }
 
+  .hero-dot.active,
+  .nav-dot.active,
+  .slide-dot.active {
+    background-color: #e81d27 !important; /* merah saat aktif */
+  }
+}
     /* PLAYER EXTRA: DOWNLOAD + PLAYLIST + TAG */
     .player-extra {
       margin-top: 6px;
@@ -1163,8 +1196,8 @@
     }
 
     /* ==============================
-       WIDE PLAYER MODE – VIDEO SAJA
-       ============================== */
+        WIDE PLAYER MODE – VIDEO SAJA
+        ============================== */
     .player-section.wide .player-body {
       grid-template-columns: 1fr;
       gap: 16px;
@@ -1210,8 +1243,8 @@
     }
 
     /* =========================
-       CINEMA MODE
-       ========================= */
+        CINEMA MODE
+        ========================= */
     body.cinema-mode {
       background: #000 !important;
       overflow: hidden;
@@ -1732,7 +1765,7 @@
       }
     }
 
-   @media (max-width: 480px) {
+    @media (max-width: 480px) {
   .download-btn {
     padding: 4px 8px;
     gap: 3px;
@@ -1887,13 +1920,13 @@
 
     <section id="playerSection" class="player-section">
       <div class="player-card">
-               <div class="player-header">
+        <div class="player-header">
           <div class="player-title" id="playerTitle">Judul Video</div>
           <div class="player-header-right">
-            <!-- 🔙 tombol kembali ke video sebelumnya -->
-            <button id="playerBackBtn" class="player-close-btn" style="display:none;">
-              ⬅ 
-            </button>
+          <button id="playerBackBtn" class="player-close-btn">
+  ⬅
+</button>
+
 
             <button id="playerWideBtn" class="player-pill-btn" title="Perbesar tampilan">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1914,8 +1947,6 @@
             </video>
             <div id="playerDriveWrap" style="display:none;"></div>
           </div>
-
-          
 
           <div class="player-meta">
             <div class="meta-row">
@@ -1949,38 +1980,36 @@
 
             <div class="player-desc" id="playerDescription"></div>
 
-         <div class="player-extra">
-  <!-- ROW 1: Download + Playlist -->
-  <div class="player-extra-row">
-    <a id="playerDownload" class="download-btn" href="#" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="#0F9D58" d="M7.5 3L2 12l3.75 6.5L11.3 9.5 7.5 3z"></path>
-        <path fill="#4285F4" d="M16.5 3h-9l3.8 6.5L18 18.5 22 12 16.5 3z"></path>
-        <path fill="#F4B400" d="M5.75 18.5L8.5 22h9l-3.5-6-8.25 2.5z"></path>
-      </svg>
-      <span class="download-label"></span>
-    </a>
-    <span class="player-size" id="playerSize"></span>
+            <div class="player-extra">
+              <div class="player-extra-row">
+                <a id="playerDownload" class="download-btn" href="#" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="#0F9D58" d="M7.5 3L2 12l3.75 6.5L11.3 9.5 7.5 3z"></path>
+                    <path fill="#4285F4" d="M16.5 3h-9l3.8 6.5L18 18.5 22 12 16.5 3z"></path>
+                    <path fill="#F4B400" d="M5.75 18.5L8.5 22h9l-3.5-6-8.25 2.5z"></path>
+                  </svg>
+                  <span class="download-label"></span>
+                </a>
+                <span class="player-size" id="playerSize"></span>
 
-    <button id="playerPlaylistMainBtn" type="button" class="playlist-btn" title="Tambah ke playlist">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="currentColor" d="M6 3h12v18l-6-4-6 4z"></path>
-      </svg>
-      <span></span>
-    </button>
-  </div>
+                <button id="playerPlaylistMainBtn" type="button" class="playlist-btn" title="Tambah ke playlist">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor" d="M6 3h12v18l-6-4-6 4z"></path>
+                  </svg>
+                  <span></span>
+                </button>
+              </div>
 
-  <!-- ROW 2: #Label + #Artis -->
-  <div class="player-extra-row">
-    <button id="playerLabelBtn" type="button" class="tag-btn">
-      #Label
-    </button>
+              <div class="player-extra-row">
+                <button id="playerLabelBtn" type="button" class="tag-btn">
+                  #Label
+                </button>
 
-    <button id="playerArtistBtn" type="button" class="tag-btn">
-      #Artis
-    </button>
-  </div>
-</div>
+                <button id="playerArtistBtn" type="button" class="tag-btn">
+                  #Artis
+                </button>
+              </div>
+            </div>
 
           </div>
         </div>
@@ -2220,12 +2249,13 @@
     const themeLabel = document.getElementById("themeLabel");
 
     const toastEl = document.getElementById("toast");
-        // stack riwayat video di player (buat tombol Back)
+    // stack riwayat video di player (buat tombol Back)
     let playerHistoryStack = [];
     let isNavigatingBack = false;
 
-  // 🔙 untuk kembali ke preview setelah close hashtag
+    // 🔙 untuk kembali ke preview setelah close hashtag
     let lastHashtagSourceId = null;
+
     // sembunyiin carousel ketika search fokus
     searchInput.addEventListener("focus", () => {
       heroCarousel.classList.add("is-hidden");
@@ -2293,57 +2323,192 @@
     }
 
     /* =========================================
-       HERO CAROUSEL LOGIC
-       ========================================= */
+        HERO CAROUSEL LOGIC (MODIFIKASI UNTUK CIRCULAR SWIPE)
+        ========================================= */
     let carouselInterval;
-    
-    function renderCarousel() {
-      const historyIds = getHistory().slice(0, 3);
-      heroCarousel.innerHTML = "";
-      
-      checkCarouselVisibility();
+    let carouselResumeTimeout; // 🔥 jeda sebelum auto jalan lagi
+    let heroSlideCount = 0;    // jumlah slide aktif
+    let currentSlideIndex = 0;  // index slide yang sedang tampil
+    let slideDomElements = []; // 🔥 Menyimpan elemen DOM slide
 
-      if (historyIds.length === 0) return;
-
-      let slidesHTML = "";
-      let indicatorsHTML = `<div class="hero-indicators">`;
-
-      historyIds.forEach((id, index) => {
-        const vid = videos.find(v => v.id === id);
-        if(!vid) return;
-
-        const activeClass = index === 0 ? " active" : "";
-        
-        slidesHTML += `
-          <div class="hero-slide${activeClass}" data-index="${index}">
-            <img src="${vid.thumb}" class="hero-bg-img" alt="${vid.title}">
-            <div class="hero-overlay-gradient"></div>
-            <div class="hero-content">
-              <div class="hero-meta">
-                <span>${vid.category}</span> • <span>${vid.duration}</span> • <span>${new Date(vid.date).getFullYear()}</span>
-              </div>
-              <h2 class="hero-title">${vid.title}</h2>
-              <div class="hero-desc">${vid.description}</div>
-              <div class="hero-actions">
-                <button class="hero-btn hero-btn-primary" onclick="openPlayerInline(${vid.id}); setPlayerMode('wide')">
-                  ▶ Tonton lagi
-                </button>
-                <button class="hero-btn hero-btn-pink-outline" onclick="goToPlaylistFromCarousel()">
-                  📁 Playlist
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-
-        indicatorsHTML += `<div class="hero-dot${activeClass}" onclick="switchSlide(${index})"></div>`;
-      });
-
-      indicatorsHTML += `</div>`;
-      heroCarousel.innerHTML = slidesHTML + indicatorsHTML;
-
-      startCarouselInterval(historyIds.length);
+    // ====== CAROUSEL AUTO DELAY UTILS ======
+    function clearCarouselTimers() {
+      if (carouselInterval) {
+        clearInterval(carouselInterval);
+        carouselInterval = null;
+      }
+      if (carouselResumeTimeout) {
+        clearTimeout(carouselResumeTimeout);
+        carouselResumeTimeout = null;
+      }
     }
+
+    function pauseAutoCarousel() {
+      // stop auto-slide dulu
+      clearCarouselTimers();
+      if (heroSlideCount <= 1) return;
+
+      // start lagi setelah 15 detik (bisa kamu ganti)
+      carouselResumeTimeout = setTimeout(() => {
+        startCarouselInterval(heroSlideCount);
+      }, 15000);
+    }
+    // =======================================
+
+    // 🔀 acak semua video dalam folder label/artis
+    function shuffleFolder(kind, value) {
+      if (!value) return;
+      const baseList = getModeBaseList();
+      const target = value.toLowerCase();
+      const list = baseList.filter(v =>
+        kind === "label"
+          ? (v.label || "").toLowerCase() === target
+          : (v.actress || "").toLowerCase() === target
+      );
+      if (!list.length) return;
+      const randomVideo = list[Math.floor(Math.random() * list.length)];
+      openPlayerInline(randomVideo.id);
+    }
+    
+ function renderCarousel() {
+  heroCarousel.innerHTML = "";
+
+  const isFolderLabel =
+    state.mode === "all" &&
+    state.category === "Cinematic" &&
+    state.subFilter &&
+    state.subFilter.type === "label";
+
+  const isFolderArtist =
+    state.mode === "all" &&
+    state.category === "Relax" &&
+    state.subFilter &&
+    state.subFilter.type === "artist";
+
+  const baseList = getModeBaseList();
+  let slides = [];
+  let contextType = "history";
+  let folderKind = "";
+  let folderName = "";
+  let totalFolderVideos = 0;
+
+  // 🎯 MODE FOLDER LABEL / ARTIS
+  if (isFolderLabel || isFolderArtist) {
+    const target = (state.subFilter.value || "").toLowerCase();
+    const folderVideos = baseList
+      .filter(v =>
+        isFolderLabel
+          ? (v.label || "").toLowerCase() === target
+          : (v.actress || "").toLowerCase() === target
+      )
+      .sort((a, b) => parseDate(b.date) - parseDate(a.date));
+
+    if (folderVideos.length > 0) {
+      contextType = isFolderLabel ? "folder-label" : "folder-artist";
+      folderKind = isFolderLabel ? "Label" : "Artis";
+      folderName = state.subFilter.value;
+      totalFolderVideos = folderVideos.length;
+      slides = folderVideos.slice(0, 3); // maksimal 3 slide
+    }
+  }
+
+  // 🏠 MODE HOME (HISTORY)
+  if (contextType === "history") {
+    const historyIds = getHistory().slice(0, 3);
+    slides = historyIds
+      .map(id => videos.find(v => v.id === id))
+      .filter(Boolean);
+  }
+
+  // Kalau nggak ada slide → matikan carousel & timer
+  if (!slides.length) {
+    heroCarousel.classList.add("is-hidden");
+    clearCarouselTimers();
+    heroSlideCount = 0;
+    currentSlideIndex = 0;
+    return;
+  }
+
+  let slidesHTML = "";
+  let indicatorsHTML = `<div class="hero-indicators">`;
+
+  slides.forEach((vid, index) => {
+    const activeClass = index === 0 ? " active" : "";
+    const year = vid.date ? new Date(vid.date).getFullYear() : "";
+
+    let metaLine = `${vid.category} • ${vid.duration}`;
+    let titleText = vid.title;
+    let descText = vid.description || "";
+
+    if (contextType === "folder-label" || contextType === "folder-artist") {
+      metaLine = `${folderKind} • ${totalFolderVideos} video • ${year}`;
+      titleText = `${folderKind}: ${folderName}`;
+      descText = vid.description
+        ? `Video unggulan: ${vid.title} — ${vid.description}`
+        : `Koleksi video ${folderKind.toLowerCase()} ${folderName}.`;
+    } else {
+      metaLine = `${vid.category} • ${vid.duration} • ${year}`;
+    }
+
+    const safeName = (folderName || "").replace(/'/g, "\\'");
+
+    let secondaryBtn = `
+      <button class="hero-btn hero-btn-pink-outline" onclick="goToPlaylistFromCarousel()">
+        📁 Playlist
+      </button>
+    `;
+
+    if (contextType === "folder-label") {
+      secondaryBtn = `
+        <button class="hero-btn hero-btn-pink-outline" onclick="shuffleFolder('label','${safeName}')">
+          🔀 Acak semua ${folderKind.toLowerCase()}
+        </button>
+      `;
+    } else if (contextType === "folder-artist") {
+      secondaryBtn = `
+        <button class="hero-btn hero-btn-pink-outline" onclick="shuffleFolder('artist','${safeName}')">
+          🔀 Acak semua ${folderKind.toLowerCase()}
+        </button>
+      `;
+    }
+
+    slidesHTML += `
+      <div class="hero-slide${activeClass}" data-index="${index}">
+        <img src="${vid.thumb}" class="hero-bg-img" alt="${vid.title}">
+        <div class="hero-overlay-gradient"></div>
+        <div class="hero-content">
+          <div class="hero-meta">
+            <span>${metaLine}</span>
+          </div>
+          <h2 class="hero-title">${titleText}</h2>
+          <div class="hero-desc">${descText}</div>
+          <div class="hero-actions">
+            <button class="hero-btn hero-btn-primary" onclick="openPlayerInline(${vid.id})">
+              ▶ Tonton lagi
+            </button>
+            ${secondaryBtn}
+          </div>
+        </div>
+      </div>
+    `;
+
+    indicatorsHTML += `
+      <div class="hero-dot${activeClass}" onclick="userSwitchSlide(${index})"></div>
+    `;
+  });
+
+  indicatorsHTML += `</div>`;
+  heroCarousel.innerHTML = slidesHTML + indicatorsHTML;
+  heroCarousel.classList.remove("is-hidden");
+
+  // 🔥 update state global carousel
+  slideDomElements = heroCarousel.querySelectorAll(".hero-slide");
+  heroSlideCount = slideDomElements.length;
+  currentSlideIndex = 0;
+
+  // mulai auto slide (looping) untuk semua konteks
+  startCarouselInterval(heroSlideCount);
+}
 
     function goToPlaylistFromCarousel() {
       if (playerSection.classList.contains("show")) {
@@ -2362,6 +2527,7 @@
 
     function checkCarouselVisibility() {
       const isPlayerOpen = playerSection.classList.contains("show");
+      const isSearchFocused = document.activeElement === searchInput;
       const hasHistory = getHistory().length > 0;
 
       const isRootHome =
@@ -2369,49 +2535,188 @@
         state.category === "Semua" &&
         !state.subFilter;
 
-      if (isRootHome && !isPlayerOpen && hasHistory) {
+      const isFolderLabel =
+        state.mode === "all" &&
+        state.category === "Cinematic" &&
+        state.subFilter &&
+        state.subFilter.type === "label";
+
+      const isFolderArtist =
+        state.mode === "all" &&
+        state.category === "Relax" &&
+        state.subFilter &&
+        state.subFilter.type === "artist";
+
+      let hasFolderVideos = false;
+      if (isFolderLabel || isFolderArtist) {
+        const baseList = getModeBaseList();
+        const target = (state.subFilter.value || "").toLowerCase();
+        const folderVideos = baseList.filter(v =>
+          isFolderLabel
+            ? (v.label || "").toLowerCase() === target
+            : (v.actress || "").toLowerCase() === target
+        );
+        hasFolderVideos = folderVideos.length > 0;
+      }
+
+      if (isSearchFocused) {
+        heroCarousel.classList.add("is-hidden");
+        return;
+      }
+
+      if (
+        !isPlayerOpen &&
+        (
+          (isRootHome && hasHistory) ||
+          ((isFolderLabel || isFolderArtist) && hasFolderVideos)
+        )
+      ) {
         heroCarousel.classList.remove("is-hidden");
       } else {
         heroCarousel.classList.add("is-hidden");
       }
     }
 
-    function switchSlide(index) {
-      const slides = document.querySelectorAll(".hero-slide");
-      const dots = document.querySelectorAll(".hero-dot");
-      
-      if(!slides.length) return;
-
-      let currentActiveIndex = -1;
-      slides.forEach((slide, i) => {
-        if(slide.classList.contains("active")) {
-          currentActiveIndex = i;
-        }
-      });
-
-      slides.forEach(slide => {
-        slide.classList.remove("active");
-        slide.classList.remove("prev");
-      });
-      dots.forEach(dot => dot.classList.remove("active"));
-
-      slides[index].classList.add("active");
-      dots[index].classList.add("active");
-
-      if(currentActiveIndex !== -1 && currentActiveIndex !== index) {
-        slides[currentActiveIndex].classList.add("prev");
-      }
-    }
-
+    // 🔁 auto slide, pakai index global
     function startCarouselInterval(count) {
-      if (carouselInterval) clearInterval(carouselInterval);
+      clearCarouselTimers(); // 🔥 pastikan nggak dobel interval
       if (count <= 1) return; 
 
-      let currentIndex = 0;
       carouselInterval = setInterval(() => {
-        currentIndex = (currentIndex + 1) % count;
-        switchSlide(currentIndex);
+        if (heroSlideCount <= 1) return;
+        const nextIndex = (currentSlideIndex + 1) % heroSlideCount;
+        switchSlide(nextIndex, "next");
       }, 7000); 
+    }
+
+    // switch slide (dipakai auto & user)
+  function switchSlide(targetIndex, direction = null) {
+  const slides = slideDomElements;
+  const dots = document.querySelectorAll(".hero-dot");
+
+  if (!slides.length) return;
+  if (targetIndex < 0 || targetIndex >= slides.length) return;
+
+  const currentIndex = currentSlideIndex;
+  if (targetIndex === currentIndex) return;
+
+  // Tentukan arah default kalau nggak dikirim
+  if (!direction) {
+    if (currentIndex === slides.length - 1 && targetIndex === 0) {
+      direction = "next"; // dari terakhir ke pertama
+    } else if (currentIndex === 0 && targetIndex === slides.length - 1) {
+      direction = "prev"; // dari pertama ke terakhir
+    } else {
+      direction = targetIndex > currentIndex ? "next" : "prev";
+    }
+  }
+
+  const currentSlide = slides[currentIndex];
+  const nextSlide = slides[targetIndex];
+
+  // Matikan transisi dulu
+  slides.forEach(slide => slide.classList.add("no-transition"));
+  slides.forEach(slide => slide.classList.remove("prev", "active", "coming-from-left", "coming-from-right"));
+
+  // Set posisi awal next slide
+  if (direction === "next") {
+    nextSlide.classList.add("coming-from-right"); // datang dari kanan
+  } else {
+    nextSlide.classList.add("coming-from-left");  // datang dari kiri
+  }
+
+  // Aktifkan transisi untuk current & next
+  currentSlide.classList.remove("no-transition");
+  nextSlide.classList.remove("no-transition");
+
+  currentSlide.classList.add("active");
+  void nextSlide.offsetWidth; // force reflow
+
+  // Current keluar
+  if (direction === "next") {
+    currentSlide.classList.add("prev"); // geser ke kiri (-100%)
+  } else {
+    currentSlide.classList.remove("prev"); // balik ke kanan (100%)
+  }
+  currentSlide.classList.remove("active");
+
+  // Next masuk
+  nextSlide.classList.add("active");
+  nextSlide.classList.remove("coming-from-left", "coming-from-right");
+
+  // Update dots
+  dots.forEach((dot, i) => {
+    dot.classList.toggle("active", i === targetIndex);
+  });
+
+  currentSlideIndex = targetIndex;
+}
+
+function userSwitchSlide(targetIndex) {
+  switchSlide(targetIndex);
+  pauseAutoCarousel(); // jeda auto setelah user interaksi
+}
+
+
+    // ====== SWIPE GESTURE HERO CAROUSEL ======
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let isTouchingCarousel = false;
+
+    function handleCarouselTouchStart(e) {
+      if (!heroCarousel) return;
+      isTouchingCarousel = true;
+      const point = e.touches ? e.touches[0] : e;
+      touchStartX = point.clientX;
+      touchEndX = point.clientX;
+      // 🔥 Nonaktifkan auto-slide saat sentuhan dimulai
+      clearCarouselTimers();
+    }
+
+    function handleCarouselTouchMove(e) {
+      if (!isTouchingCarousel) return;
+      const point = e.touches ? e.touches[0] : e;
+      touchEndX = point.clientX;
+    }
+
+  function handleCarouselTouchEnd() {
+  if (!isTouchingCarousel) return;
+  const deltaX = touchEndX - touchStartX;
+  const threshold = 40;
+
+  if (Math.abs(deltaX) > threshold && heroSlideCount > 1) {
+    if (deltaX < 0) {
+      // swipe kiri → next (loop ke awal)
+      let nextIndex = currentSlideIndex + 1;
+      let direction = "next";
+      if (nextIndex >= heroSlideCount) {
+        nextIndex = 0;
+      }
+      switchSlide(nextIndex, direction);
+    } else {
+      // swipe kanan → prev (loop ke akhir)
+      let prevIndex = currentSlideIndex - 1;
+      let direction = "prev";
+      if (prevIndex < 0) {
+        prevIndex = heroSlideCount - 1;
+      }
+      switchSlide(prevIndex, direction);
+    }
+    pauseAutoCarousel();
+  } else {
+    // nggak jadi swipe → lanjut auto slide
+    startCarouselInterval(heroSlideCount);
+  }
+
+  isTouchingCarousel = false;
+  touchStartX = 0;
+  touchEndX = 0;
+}
+
+    if (heroCarousel) {
+      heroCarousel.addEventListener("touchstart", handleCarouselTouchStart, { passive: true });
+      heroCarousel.addEventListener("touchmove", handleCarouselTouchMove, { passive: true });
+      heroCarousel.addEventListener("touchend", handleCarouselTouchEnd);
     }
 
     function renderFilters() {
@@ -2459,7 +2764,7 @@
         filtersEl.appendChild(chip);
       });
 
-        if (
+      if (
         state.subFilter &&
         (state.subFilter.type === "label" || state.subFilter.type === "artist")
       ) {
@@ -2469,11 +2774,9 @@
 
         const typeLabel = state.subFilter.type === "label" ? "Label" : "Artis";
 
-        // teks utama: "Label: SOD Create" / "Artis: Remu Suzumori"
         const textSpan = document.createElement("span");
         textSpan.textContent = `${typeLabel}: ${state.subFilter.value}`;
 
-        // ikon close ✕
         const closeSpan = document.createElement("span");
         closeSpan.className = "chip-close";
         closeSpan.textContent = "✕";
@@ -2482,10 +2785,8 @@
         subChip.appendChild(closeSpan);
 
         subChip.addEventListener("click", () => {
-          // simpan dulu id asal hashtag (kalau ada)
           const returnId = lastHashtagSourceId;
 
-          // reset filter folder
           state.subFilter = null;
           state.page = 1;
           lastHashtagSourceId = null;
@@ -2493,7 +2794,6 @@
           renderFilters();
           renderGrid();
 
-          // kalau datangnya dari hashtag, balik lagi ke preview video tadi
           if (returnId) {
             openPlayerInline(returnId);
           }
@@ -2501,7 +2801,6 @@
 
         filtersEl.appendChild(subChip);
       }
-
 
       let labelText = categoryLabelMap[state.category] || state.category;
       if (state.mode === "all" && state.subFilter) {
@@ -2696,7 +2995,7 @@
       }
     });
 
-       function closePlayerInline() {
+    function closePlayerInline() {
       playerSection.classList.remove("show");
       playerSection.classList.remove("wide");
       playerSection.classList.remove("cinema");
@@ -2708,7 +3007,6 @@
       delete playerSection.dataset.currentId;
       delete playerSection.dataset.mode;
 
-      // 🔁 reset history tombol Back
       playerHistoryStack = [];
       updateBackButton();
 
@@ -2920,6 +3218,7 @@
       });
 
       gridEl.classList.remove("list-view");
+      renderCarousel();
       checkCarouselVisibility();
     }
 
@@ -2984,6 +3283,7 @@
       });
 
       gridEl.classList.remove("list-view");
+      renderCarousel();
       checkCarouselVisibility();
     }
 
@@ -3083,6 +3383,8 @@
         emptyEl.innerHTML = msg;
         emptyEl.style.display = "block";
         paginationWrapEl.style.display = "none";
+        renderCarousel();
+        checkCarouselVisibility();
         return;
       }
 
@@ -3094,6 +3396,8 @@
         `;
         emptyEl.style.display = "block";
         paginationWrapEl.style.display = "none";
+        renderCarousel();
+        checkCarouselVisibility();
         return;
       } else {
         emptyEl.style.display = "none";
@@ -3160,6 +3464,10 @@
       });
 
       gridEl.classList.remove("list-view");
+
+      // 🔥 update carousel sesuai context (home / folder label / folder artis)
+      renderCarousel();
+      checkCarouselVisibility();
     }
 
     searchInput.addEventListener("input", (e) => {
@@ -3178,11 +3486,12 @@
         playerWideBtn.title = "Kembalikan ke tampilan awal";
       }
     }
-    function updateBackButton() {
-      if (!playerBackBtn) return;
-      playerBackBtn.style.display =
-        playerHistoryStack.length > 0 ? "inline-flex" : "none";
-    }
+function updateBackButton() {
+  if (!playerBackBtn) return;
+  // selalu tampil, biar setiap preview video ada tombol back
+  playerBackBtn.style.display = "inline-flex";
+}
+
 
     function setPlayerMode(mode) {
       playerSection.classList.remove("wide", "cinema");
@@ -3216,12 +3525,11 @@
     function openPlayerInline(id) {
       const video = videos.find((v) => v.id === id);
       if (!video) return;
-            // kalau sudah ada video yang lagi diputar, simpan dulu ke history
+
       const currentIdExisting = parseInt(playerSection.dataset.currentId || "-1", 10);
       if (!isNavigatingBack && currentIdExisting > 0 && currentIdExisting !== id) {
         playerHistoryStack.push(currentIdExisting);
       }
-
 
       playerSection.dataset.currentId = id;
       playerTitleEl.textContent = video.title;
@@ -3236,7 +3544,6 @@
       playerActorEl.textContent = video.actor || "-";
       playerActressEl.textContent = video.actress || "-";
 
-      // 🔥 isi tombol hashtag
       if (playerLabelBtn) {
         if (video.label) {
           playerLabelBtn.textContent = `#${video.label}`;
@@ -3302,10 +3609,9 @@
         playerVideoEl.currentTime = 0;
       }
 
-            updatePlayerPlaylistButton(id);
+      updatePlayerPlaylistButton(id);
       addToHistory(id);
       updateBackButton();
-
 
       checkCarouselVisibility();
       renderGrid();
@@ -3325,24 +3631,30 @@
     }
 
     playerCloseBtn.addEventListener("click", closePlayerInline);
-    if (playerBackBtn) {
-      playerBackBtn.addEventListener("click", () => {
-        if (!playerHistoryStack.length) return;
+if (playerBackBtn) {
+  playerBackBtn.addEventListener("click", () => {
+    // 1️⃣ Kalau ada history video → balik ke video sebelumnya
+    if (playerHistoryStack.length) {
+      const prevId = playerHistoryStack.pop();
+      if (!prevId) {
+        closePlayerInline();
+        return;
+      }
 
-        const prevId = playerHistoryStack.pop();
-        if (!prevId) {
-          updateBackButton();
-          return;
-        }
+      isNavigatingBack = true;
+      openPlayerInline(prevId);
+      isNavigatingBack = false;
 
-        // kasih tau openPlayerInline kalau ini navigasi "mundur"
-        isNavigatingBack = true;
-        openPlayerInline(prevId);
-        isNavigatingBack = false;
-
-        updateBackButton();
-      });
+      updateBackButton();
+      return;
     }
+
+    // 2️⃣ Kalau tidak ada history → anggap "kembali ke halaman sebelumnya"
+    //    = tutup player dan balik ke tampilan grid/folder yang tadi
+    closePlayerInline();
+  });
+}
+
 
     playerPlaylistMainBtn.addEventListener("click", () => {
       const id = parseInt(playerSection.dataset.currentId || "-1", 10);
@@ -3363,13 +3675,11 @@
       closePlayerInline();
     });
 
-    // 🔥 tombol hashtag label
     if (playerLabelBtn) {
       playerLabelBtn.addEventListener("click", () => {
         const value = playerLabelEl.textContent.trim();
         if (!value || value === "-") return;
 
-        // simpan id video yang lagi dipreview
         const currentId = parseInt(playerSection.dataset.currentId || "-1", 10);
         lastHashtagSourceId = currentId > 0 ? currentId : null;
 
@@ -3382,7 +3692,6 @@
         closePlayerInline();
       });
     }
-
 
     playerActressEl.addEventListener("click", () => {
       const value = playerActressEl.textContent.trim();
@@ -3397,14 +3706,11 @@
       closePlayerInline();
     });
 
-    // 🔥 tombol hashtag artis
-    // 🔥 tombol hashtag artis
     if (playerArtistBtn) {
       playerArtistBtn.addEventListener("click", () => {
         const value = playerActressEl.textContent.trim();
         if (!value || value === "-") return;
 
-        // simpan id video yang lagi dipreview
         const currentId = parseInt(playerSection.dataset.currentId || "-1", 10);
         lastHashtagSourceId = currentId > 0 ? currentId : null;
 
@@ -3452,7 +3758,6 @@
     });
 
     // INIT
-    renderCarousel();
     renderFilters();
     renderGrid();
   </script>
