@@ -941,6 +941,17 @@
     font-weight: 500;
   }
 }
+    /* 🔥 CSS Tambahan untuk ikon SVG Lucide di tombol Back */
+    #playerBackBtn svg {
+      width: 14px; /* Kecilkan sedikit agar pas dengan ukuran font */
+      height: 14px;
+      margin: 0;
+      display: block;
+      /* Pastikan warna sesuai dengan teks */
+      stroke: currentColor; 
+      fill: none;
+    }
+    /* Akhir CSS Tambahan */
 @media (max-width: 480px) {
   .thumb-wrapper {
     overflow: hidden;
@@ -1955,8 +1966,8 @@
           <div class="player-title" id="playerTitle">Judul Video</div>
           <div class="player-header-right">
           <button id="playerBackBtn" class="player-close-btn">
-  ⬅
-</button>
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-step-back"><line x1="18" x2="18" y1="20" y2="4"/><polygon points="15 20 4 12 15 4"/></svg>
+            </button>
 
 
             <button id="playerWideBtn" class="player-pill-btn" title="Perbesar tampilan">
