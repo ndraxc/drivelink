@@ -2685,28 +2685,19 @@ function renderSearchSuggestions(list) {
   searchSuggestionsEl.innerHTML = html;
   searchSuggestionsEl.style.display = "block";
 
-  // klik pakai mouse
- // klik pakai mouse
-Array.from(
+ Array.from(
   searchSuggestionsEl.querySelectorAll(".search-suggestion-item")
 ).forEach((el, idx) => {
   el.addEventListener("click", () => {
     const item = list[idx];
-    if (!item || typeof item.action !== "function") return;
-
-    // 🔥 Tampilkan shimmer dulu
-    showGridShimmer();
-    hideSearchSuggestions();
-
-    // kasih delay dikit biar shimmer kebaca
-    setTimeout(() => {
-      item.action();        // ini yang bakal set state + renderGrid()
-      hideGridShimmer();    // matikan shimmer setelah grid tampil
-    }, 700); // boleh kamu ganti 400 / 500 kalau mau lebih cepet
+    applySuggestionItem(item);   // 🔥 pakai helper
   });
 });
 
 suggestionActiveIndex = -1;
+
+suggestionActiveIndex = -1;
+
 }
 
 
@@ -2728,6 +2719,47 @@ function updateSearchSuggestions(query) {
 
   // simpan list yg dipakai terakhir untuk keyboard nav
   searchSuggestionsEl._currentList = filtered;
+}
+function applySuggestionItem(item) {
+  if (!item) return;
+
+  // 🔹 1. Atur tampilan kolom search
+  if (searchInput) {
+    if (item.type === "title" || item.type === "kode") {
+      // judul / kode → tampil di textbox
+      searchInput.value = item.display;
+      state.search = item.display;
+      state.page = 1;
+
+      // kosongkan placeholder biar yang kelihatan cuma teks ini
+      searchInput.setAttribute("placeholder", "");
+    } else if (item.type === "label" || item.type === "artist") {
+      // label & artis: kita serahkan ke action() (buka folder)
+      searchInput.value = "";
+      state.search = "";
+      state.page = 1;
+    }
+
+    // toggle tombol X
+    if (searchClearBtn) {
+      searchClearBtn.style.display =
+        searchInput.value.trim() ? "inline-flex" : "none";
+    }
+  }
+
+  // 🔹 2. Shimmer + eksekusi action
+  showGridShimmer();
+  hideSearchSuggestions();
+
+  setTimeout(() => {
+    if (typeof item.action === "function") {
+      item.action();    // ini yang buka folder / set state / renderGrid
+    } else {
+      // fallback kalau suatu saat ada item tanpa action
+      renderGrid();
+    }
+    hideGridShimmer();
+  }, 700); // kalau mau lebih cepat, kecilin aja
 }
 
 // 🔧 Atur jumlah video per halaman sesuai ukuran layar
@@ -4219,22 +4251,15 @@ if (searchInput) {
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       suggestionActiveIndex = (suggestionActiveIndex - 1 + list.length) % list.length;
-    } else if (e.key === "Enter") {
-      if (suggestionActiveIndex >= 0 && suggestionActiveIndex < list.length) {
-        e.preventDefault();
-        const item = list[suggestionActiveIndex];
-        if (item && typeof item.action === "function") {
-          item.action();
-        }
-        hideSearchSuggestions();
-      }
-      return;
-    } else if (e.key === "Escape") {
-      hideSearchSuggestions();
-      return;
-    } else {
-      return; // biarin tombol lain jalan normal
-    }
+} else if (e.key === "Enter") {
+  if (suggestionActiveIndex >= 0 && suggestionActiveIndex < list.length) {
+    e.preventDefault();
+    const item = list[suggestionActiveIndex];
+    applySuggestionItem(item);   // 🔥 sama kayak klik mouse
+  }
+  return;
+}
+
 
     // update class .active
     const els = searchSuggestionsEl.querySelectorAll(".search-suggestion-item");
