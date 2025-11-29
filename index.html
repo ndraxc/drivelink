@@ -60,6 +60,12 @@
       --text-white: #000000 !important; 
       --muted: #323232 !important;
     }
+@media (max-width: 480px) {
+  .search-clear-btn {
+   margin-left: -12px;   /* geser dikit dari tepi kanan */
+    /* kalau masih kurang, coba 8px / 10px */
+  }
+}
 
     #clockColon {
       display: inline-block;
@@ -2756,7 +2762,7 @@ window.addEventListener("resize", () => {
     const filtersEl = document.getElementById("filters");
     const searchInput = document.getElementById("searchInput");
     const searchSuggestionsEl = document.getElementById("searchSuggestions");
-
+const searchClearBtn = document.getElementById("searchClearBtn");
     function updateSearchPlaceholder() {
   if (!searchInput) return;
 
@@ -2874,6 +2880,28 @@ window.addEventListener("resize", () => {
         checkCarouselVisibility();
       }
     });
+if (searchClearBtn && searchInput) {
+  searchClearBtn.addEventListener("click", () => {
+    // kosongkan input
+    searchInput.value = "";
+    // reset state pencarian
+    state.search = "";
+    state.page = 1;
+
+    // matikan suggestion + shimmer
+    hideSearchSuggestions();
+    hideGridShimmer();
+
+    // render ulang semua video (mode sekarang tetap dihormati)
+    renderGrid();
+
+    // fokus balik ke input biar enak
+    searchInput.focus();
+
+    // sembunyikan tombol X lagi
+    searchClearBtn.style.display = "none";
+  });
+}
 
     function loadFromStorage(key, fallback) {
       try {
@@ -4122,16 +4150,33 @@ updateSearchPlaceholder();
 
 searchInput.addEventListener("input", (e) => {
   const value = e.target.value;
+  const trimmed = value.trim();
 
-  // ===== hanya suggestion =====
+  // 🔥 Tampilkan/ sembunyikan tombol X
+  if (searchClearBtn) {
+    searchClearBtn.style.display = trimmed ? "inline-flex" : "none";
+  }
+
+  // Hapus suggestion timer lama
   clearTimeout(searchSuggestTimer);
+
+  // Kalau input kosong → reset pencarian & grid
+  if (!trimmed) {
+    state.search = "";
+    state.page = 1;
+
+    hideSearchSuggestions();
+    hideGridShimmer();
+    renderGrid();   // balik ke kondisi awal sesuai mode (home/playlist/history/folder)
+    return;         // stop, jangan proses suggestion
+  }
+
+  // ===== Hanya untuk suggestion (debounce) =====
   searchSuggestTimer = setTimeout(() => {
     updateSearchSuggestions(value);
-  }, 700); // delay suggestion
-  
-  // JANGAN renderGrid di sini!
-  // JANGAN show shimmer di sini!
+  }, 700); // ini nanti bisa kamu atur durasinya (lihat poin 3)
 });
+
 searchInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
