@@ -2,9 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Movieku - Koleksi & History</title>
+  <title>Drive Flix - Movieku</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
+<style>
     :root {
       /* DEFAULT = DARK THEME */
       --bg: #000000;
@@ -497,23 +497,70 @@
       transform: translateY(-2px);
     }
 
-    .hero-indicators {
-      position: absolute;
-      bottom: 30px;
-      right: 30px;
-      display: flex;
-      gap: 8px;
-      z-index: 4;
-    }
+  /* ===== HERO DOT STRIP BAR ===== */
+.hero-indicators {
+  position: absolute;
+  bottom: 16px;
+  right: 18px;
 
-    .hero-dot {
-      width: 16px;
-      height: 4px;
-      background: rgba(255,255,255,0.3);
-      border-radius: 2px;
-      cursor: pointer;
-      transition: background 0.3s, box-shadow 0.3s;
-    }
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  /* 🔥 Bar hitam elegan tanpa terlalu tebal
+     bisa kamu turunin opacity kalau mau makin transparan */
+  background: rgba(0, 0, 0, 0.45);
+
+  /* Glow lembut ke bawah biar lebih cinematic */
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.7);
+
+  z-index: 5;
+}
+
+/* ===== Dot Default ===== */
+.hero-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #6b7280;
+  opacity: 0.9;
+  cursor: pointer;
+
+  transition:
+    width 0.22s ease-out,
+    background 0.22s ease-out,
+    opacity 0.22s ease-out,
+    box-shadow 0.22s ease-out;
+}
+
+/* ===== Dot Aktif (Netflix-style Red Pill) ===== */
+.hero-dot.active {
+  width: 20px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  opacity: 1;
+
+  /* Glow merah lembut */
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.8),
+              0 0 4px rgba(239, 68, 68, 0.6);
+}
+.hero-indicators {
+  background: rgba(0, 0, 0, 0);   /* SUPER TIPIS */
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0);
+}
+.card .thumb-wrapper {
+  aspect-ratio: 16 / 9;
+}
+
+.card .card-main {
+  padding: 1px 8px;
+}
+.grid-separator {
+  display: none !important;
+}
+
     
     body.theme-light .hero-dot {
       background: rgba(255,255,255,0.3); 
@@ -1596,6 +1643,13 @@
       transform: none;
       box-shadow: 0 0 0 1px var(--border-light);
     }
+@media (max-width: 480px) {
+  #otherVideosHeader {
+      /* dari player ke judul */
+    margin-bottom: 26px !important;  /* dari judul ke list video */
+  }
+  
+}
 
     #toast {
       position: fixed;
@@ -1814,6 +1868,19 @@
     font-size: 9px;
     border-radius: 5px;
   }
+@media (max-width: 480px) {
+  .load-more-wrap {
+    margin-top: 16px;
+  }
+  #paginationWrap {
+    margin-top: 32px !important;   /* 🔥 jarak 32px */
+  }
+  .page-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+    min-width: 28px;
+  }
+}
 
   .download-btn svg {
     width: 14px;
@@ -1873,8 +1940,7 @@
     }
 
   </style>
-</head>
-<body class="theme-dark">
+  <body class="theme-dark">
   <div class="space-bg">
     <span class="space-star star-1"></span>
     <span class="space-star star-2"></span>
@@ -2058,6 +2124,8 @@
       </div>
     </section>
 
+
+    
     <div id="otherVideosHeader" class="section-header" style="display:none;">
       Video lainnya
     </div>
@@ -2217,6 +2285,24 @@
         size: "52 MB",
         downloadUrl: "sample_remu1.mp4"
       },
+      {
+        id: 5,
+        title: "Remu Suzumori - Soft Light Portrait",
+        duration: "04:45",
+        durationSec: 4 * 60 + 45,
+        category: "Relax",
+        thumb: "https://images.pexels.com/photos/2777898/pexels-photo-2777898.jpeg?auto=compress&cs=tinysrgb&w=800",
+        src: "sample_remu1.mp4",
+        date: "2025-08-25",
+        description: "Portrait ambience dengan tone lembut dan lighting soft ala studio.",
+        kode: "RMU-001",
+        studio: "Soft Studio",
+        label: "START",
+        actor: "—",
+        actress: "Remu Suzumori",
+        size: "52 MB",
+        downloadUrl: "sample_remu1.mp4"
+      },
         /* 🔥 ARTIS BARU TAMBAHAN BUAT TEST */
  {
     id: 6,
@@ -2254,6 +2340,28 @@
       page: 1,
       perPage: 15
     };
+// 🔧 Atur jumlah video per halaman sesuai ukuran layar
+function applyResponsivePerPage() {
+  const isMobile = window.innerWidth <= 480;
+  // 6 item = 3 baris x 2 kolom (kalau layout kamu 2 kolom di mobile)
+  state.perPage = isMobile ? 6 : 15;
+}
+let resizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    const before = state.perPage;
+    const isMobile = window.innerWidth <= 480;
+    const after = isMobile ? 6 : 15;
+
+    if (before !== after) {
+      state.perPage = after;
+      state.page = 1;       // balik ke halaman 1 biar aman
+      renderGrid();
+    }
+  }, 200); // kecilin spam render saat user resize
+});
+
 
     const gridEl = document.getElementById("grid");
     const emptyEl = document.getElementById("emptyState");
@@ -2477,6 +2585,14 @@ function pauseAutoCarousel() {
       .map(id => videos.find(v => v.id === id))
       .filter(Boolean);
   }
+  // 🔍 cek apakah benar-benar di halaman beranda (root home)
+  const isRootHome =
+    state.mode === "all" &&
+    state.category === "Semua" &&
+    !state.subFilter;
+
+  // label tombol play di hero
+  const watchLabel = isRootHome ? "Tonton lagi" : "Tonton";
 
   // Kalau nggak ada bahan slide → matikan carousel + timer
   if (!slides.length) {
@@ -2530,25 +2646,33 @@ function pauseAutoCarousel() {
       `;
     }
 
-    slidesHTML += `
-      <div class="hero-slide${activeClass}" data-index="${index}">
-        <img src="${vid.thumb}" class="hero-bg-img" alt="${vid.title}">
-        <div class="hero-overlay-gradient"></div>
-        <div class="hero-content">
-          <div class="hero-meta">
-            <span>${metaLine}</span>
-          </div>
-          <h2 class="hero-title">${titleText}</h2>
-          <div class="hero-desc">${descText}</div>
-          <div class="hero-actions">
-            <button class="hero-btn hero-btn-primary" onclick="openPlayerInline(${vid.id})">
-              ▶ Tonton lagi
-            </button>
-            ${secondaryBtn}
-          </div>
-        </div>
+  slidesHTML += `
+  <div class="hero-slide${activeClass}" data-index="${index}" data-video-id="${vid.id}">
+    <img src="${vid.thumb}" class="hero-bg-img" alt="${vid.title}">
+    <div class="hero-overlay-gradient"></div>
+
+    <div class="hero-content">
+
+      <!-- 🔥 Badge Last Watched -->
+      <div class="hero-lastwatch" style="display:none;">Terakhir ditonton</div>
+
+      <div class="hero-meta">
+        <span>${metaLine}</span>
       </div>
-    `;
+
+      <h2 class="hero-title">${titleText}</h2>
+      <div class="hero-desc">${descText}</div>
+
+      <div class="hero-actions">
+        <button class="hero-btn hero-btn-primary" onclick="openPlayerInline(${vid.id})">
+          ▶ ${watchLabel}
+        </button>
+        ${secondaryBtn}
+      </div>
+    </div>
+  </div>
+`;
+
 
     indicatorsHTML += `
       <div class="hero-dot${activeClass}" onclick="userSwitchSlide(${index})"></div>
@@ -3822,8 +3946,11 @@ if (playerBackBtn) {
     });
 
     // INIT
-    renderFilters();
-    renderGrid();
+  // INIT
+applyResponsivePerPage();
+renderFilters();
+renderGrid();
+
   </script>
 </body>
 </html>
