@@ -627,6 +627,22 @@
       box-shadow: 0 0 0 1px var(--border-light), 0 2px 8px rgba(0,0,0,0.05);
       transition: 0.2s ease;
     }
+    .search-clear-btn {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 4px;
+  display: none;            /* default disembunyikan */
+  align-items: center;
+  justify-content: center;
+}
+
+.search-clear-btn:hover {
+  color: var(--text);
+}
+
 
     .search-box:focus-within {
       box-shadow: 0 0 0 1px var(--accent), 0 0 12px var(--accent-soft);
@@ -1938,6 +1954,133 @@
         display: none !important;
       }
     }
+.search-box {
+  position: relative;
+}
+
+/* 🔽 Container dropdown */
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+
+  margin-top: 4px;
+  padding: 6px 0;
+  border-radius: 12px;
+
+  background: rgba(7, 7, 12, 0.96);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(18px);
+
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 30;
+
+  font-size: 0.82rem;
+  display: none; /* default hidden */
+}
+
+/* 1 item suggestion */
+.search-suggestion-item {
+  padding: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: pointer;
+  transition: background 0.16s ease, transform 0.08s ease;
+}
+
+.search-suggestion-item:hover {
+  background: rgba(148, 27, 27, 0.5);
+  transform: translateY(-1px);
+}
+
+/* selected via keyboard */
+.search-suggestion-item.active {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+}
+
+/* baris pertama (judul saran) */
+.search-suggestion-main {
+  color: #f9fafb;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* baris kedua (context: Label, Artis, Kode, dll) */
+.search-suggestion-meta {
+  color: #9ca3af;
+  font-size: 0.75rem;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.search-suggestion-chip {
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(248, 113, 113, 0.7);
+  font-size: 0.68rem;
+  color: #fecaca;
+}
+/* ===== Shimmer Loading ===== */
+.grid-shimmer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.shimmer-card {
+  background: rgba(255,255,255,0.06);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  height: 180px;
+}
+
+.shimmer-thumb {
+  height: 120px;
+  background: rgba(255,255,255,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-line {
+  height: 10px;
+  width: 80%;
+  margin: 10px auto;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* glow bergerak */
+.shimmer-thumb::after,
+.shimmer-line::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.25),
+    transparent
+  );
+  animation: shimmerMove 1.4s infinite;
+}
+
+@keyframes shimmerMove {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
 
   </style>
   <body class="theme-dark">
@@ -1990,15 +2133,23 @@
 
     <div class="controls">
       <div class="top-controls-row">
-        <div class="search-box" id="searchBox">
-          <span class="search-icon">
-            <svg viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
-              <line x1="16" y1="16" x2="21" y2="21" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </span>
-          <input id="searchInput" type="text" placeholder="Cari judul atau kategori..." />
-        </div>
+ <div class="search-box" id="searchBox">
+  <span class="search-icon">
+    <svg viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
+      <line x1="16" y1="16" x2="21" y2="21" stroke="currentColor" stroke-width="2"/>
+    </svg>
+  </span>
+
+  <input id="searchInput" type="text" placeholder="Cari judul atau kategori..." />
+
+  <!-- 🔥 Tombol clear / reset -->
+  <button type="button" id="searchClearBtn" class="search-clear-btn">✕</button>
+
+  <!-- 🔽 Suggestion dropdown -->
+  <div id="searchSuggestions" class="search-suggestions"></div>
+</div>
+
 
         <div class="sort-wrapper" id="sortWrapper">
           <span class="sort-label">Urutkan</span>
@@ -2135,6 +2286,7 @@
       Tidak ada video yang cocok dengan pencarian / filter kamu.  
       Coba kata kunci lain ya. 🙂
     </div>
+<div id="gridShimmer" class="grid-shimmer" style="display:none;"></div>
 
     <div id="paginationWrap" class="load-more-wrap" style="display:none;">
       <div id="pagination"></div>
@@ -2144,6 +2296,35 @@
   <div id="toast"></div>
 
   <script>
+const gridShimmerEl = document.getElementById("gridShimmer");
+
+function showGridShimmer() {
+  if (!gridShimmerEl) return;
+
+  gridShimmerEl.style.display = "grid";
+  gridEl.style.display = "none";
+
+  // bikin 8 shimmer card
+  gridShimmerEl.innerHTML = "";
+  for (let i = 0; i < 8; i++) {
+    gridShimmerEl.innerHTML += `
+      <div class="shimmer-card">
+        <div class="shimmer-thumb"></div>
+        <div class="shimmer-line"></div>
+        <div class="shimmer-line" style="width:60%;"></div>
+      </div>
+    `;
+  }
+}
+
+function hideGridShimmer() {
+  if (!gridShimmerEl) return;
+  gridShimmerEl.style.display = "none";
+  gridEl.style.display = "grid";
+}
+
+
+
     const STORAGE_KEYS = {
       THEME: "gallery-theme",
       PLAYLIST: "gallery-playlist",
@@ -2340,6 +2521,209 @@
       page: 1,
       perPage: 15
     };
+    let searchIndex = [];
+let suggestionActiveIndex = -1; // buat navigasi keyboard
+let searchSuggestTimer = null;
+let searchGridTimer = null;
+
+function buildSearchIndex() {
+  // reset
+  searchIndex = [];
+
+  const baseList = videos.slice();
+
+  baseList.forEach(video => {
+    const title = video.title || "";
+    const label = video.label || "";
+    const actress = video.actress || "";
+    const kode = video.kode || "";
+    const categoryLabel = categoryLabelMap[video.category] || video.category;
+
+    // 🎬 judul video
+    if (title) {
+      searchIndex.push({
+        type: "title",
+        query: title.toLowerCase(),
+        display: title,
+        meta: categoryLabel,
+        extra: kode ? `Kode: ${kode}` : "",
+        action: () => {
+          // set search dan filter pakai judul
+          searchInput.value = title;
+          state.search = title;
+          state.page = 1;
+          renderGrid();
+        }
+      });
+    }
+
+    // 🏷 label
+    if (label) {
+      searchIndex.push({
+        type: "label",
+        query: label.toLowerCase(),
+        display: label,
+        meta: "Label",
+        extra: "",
+        action: () => {
+          // langsung buka folder label
+          state.mode = "all";
+          state.category = "Cinematic";
+          state.subFilter = { type: "label", value: label };
+          state.page = 1;
+          searchInput.value = "";
+          state.search = "";
+          hideSearchSuggestions();
+          renderFilters();
+          renderGrid();
+        }
+      });
+    }
+
+    // 🎭 artis
+    if (actress) {
+      searchIndex.push({
+        type: "artist",
+        query: actress.toLowerCase(),
+        display: actress,
+        meta: "Artis",
+        extra: "",
+        action: () => {
+          // langsung buka folder artis
+          state.mode = "all";
+          state.category = "Relax";
+          state.subFilter = { type: "artist", value: actress };
+          state.page = 1;
+          searchInput.value = "";
+          state.search = "";
+          hideSearchSuggestions();
+          renderFilters();
+          renderGrid();
+        }
+      });
+    }
+
+    // 🔢 kode video
+    if (kode) {
+      searchIndex.push({
+        type: "kode",
+        query: kode.toLowerCase(),
+        display: kode,
+        meta: "Kode",
+        extra: title,
+        action: () => {
+          searchInput.value = kode;
+          state.search = kode;
+          state.page = 1;
+          renderGrid();
+        }
+      });
+    }
+  });
+
+  // optional: buang duplikat by display+type
+  const uniqueMap = new Map();
+  searchIndex.forEach(item => {
+    const key = item.type + "|" + item.display;
+    if (!uniqueMap.has(key)) uniqueMap.set(key, item);
+  });
+  searchIndex = Array.from(uniqueMap.values());
+}
+
+function hideSearchSuggestions() {
+  if (searchSuggestionsEl) {
+    searchSuggestionsEl.style.display = "none";
+    searchSuggestionsEl.innerHTML = "";
+  }
+  suggestionActiveIndex = -1;
+}
+
+function renderSearchSuggestions(list) {
+  if (!searchSuggestionsEl) return;
+
+  if (!list.length) {
+    hideSearchSuggestions();
+    return;
+  }
+
+  const html = list
+    .map((item, idx) => {
+      const chipLabel =
+        item.type === "title" ? "Judul" :
+        item.type === "label" ? "Label" :
+        item.type === "artist" ? "Artis" :
+        item.type === "kode" ? "Kode" :
+        "Item";
+
+      return `
+        <div class="search-suggestion-item" data-index="${idx}">
+          <div class="search-suggestion-main">${item.display}</div>
+          <div class="search-suggestion-meta">
+            <span class="search-suggestion-chip">${chipLabel}</span>
+            ${
+              item.meta
+                ? `<span>${item.meta}</span>`
+                : ""
+            }
+            ${
+              item.extra
+                ? `<span>• ${item.extra}</span>`
+                : ""
+            }
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+
+  searchSuggestionsEl.innerHTML = html;
+  searchSuggestionsEl.style.display = "block";
+
+  // klik pakai mouse
+ // klik pakai mouse
+Array.from(
+  searchSuggestionsEl.querySelectorAll(".search-suggestion-item")
+).forEach((el, idx) => {
+  el.addEventListener("click", () => {
+    const item = list[idx];
+    if (!item || typeof item.action !== "function") return;
+
+    // 🔥 Tampilkan shimmer dulu
+    showGridShimmer();
+    hideSearchSuggestions();
+
+    // kasih delay dikit biar shimmer kebaca
+    setTimeout(() => {
+      item.action();        // ini yang bakal set state + renderGrid()
+      hideGridShimmer();    // matikan shimmer setelah grid tampil
+    }, 700); // boleh kamu ganti 400 / 500 kalau mau lebih cepet
+  });
+});
+
+suggestionActiveIndex = -1;
+}
+
+
+function updateSearchSuggestions(query) {
+  if (!searchSuggestionsEl) return;
+
+  const q = (query || "").toLowerCase().trim();
+  if (!q) {
+    hideSearchSuggestions();
+    return;
+  }
+
+  // ambil maksimal 8 hasil
+  const filtered = searchIndex
+    .filter(item => item.query.includes(q))
+    .slice(0, 8);
+
+  renderSearchSuggestions(filtered);
+
+  // simpan list yg dipakai terakhir untuk keyboard nav
+  searchSuggestionsEl._currentList = filtered;
+}
+
 // 🔧 Atur jumlah video per halaman sesuai ukuran layar
 function applyResponsivePerPage() {
   const isMobile = window.innerWidth <= 480;
@@ -2371,6 +2755,62 @@ window.addEventListener("resize", () => {
     const activeFilterLabelEl = document.getElementById("activeFilterLabel");
     const filtersEl = document.getElementById("filters");
     const searchInput = document.getElementById("searchInput");
+    const searchSuggestionsEl = document.getElementById("searchSuggestions");
+
+    function updateSearchPlaceholder() {
+  if (!searchInput) return;
+
+  let text = "Cari judul atau kategori...";
+
+  const isRootHome =
+    state.mode === "all" &&
+    state.category === "Semua" &&
+    !state.subFilter;
+
+  // 📌 Beranda semua video
+  if (isRootHome) {
+    text = "Cari judul, label, atau artis...";
+  }
+
+  // 📌 Tab LABEL (pilih folder label)
+  else if (state.category === "Cinematic" && !state.subFilter) {
+    text = "Cari nama label...";
+  }
+
+  // 📌 Tab ARTIS (pilih folder artis)
+  else if (state.category === "Relax" && !state.subFilter) {
+    text = "Cari nama artis...";
+  }
+
+  // 📂 Di dalam folder label
+  else if (
+    state.subFilter &&
+    state.subFilter.type === "label"
+  ) {
+    text = `Cari video di label ${state.subFilter.value}...`;
+  }
+
+  // 🎭 Di dalam folder artis
+  else if (
+    state.subFilter &&
+    state.subFilter.type === "artist"
+  ) {
+    text = `Cari video di artis ${state.subFilter.value}...`;
+  }
+
+  // 🎧 Mode playlist
+  if (state.mode === "playlist") {
+    text = "Cari video di playlist kamu...";
+  }
+
+  // 🕒 Mode history
+  if (state.mode === "history") {
+    text = "Cari di riwayat tontonan...";
+  }
+
+  searchInput.placeholder = text;
+}
+
     const countSuffixEl = document.getElementById("countSuffix");
     const searchBoxWrap = document.getElementById("searchBox");
     const modeLabelEl = document.getElementById("modeLabel");
@@ -3182,6 +3622,28 @@ if (heroCarousel) {
         closeSortMenu();
       }
     });
+document.addEventListener("click", (e) => {
+  // existing logic sort
+  if (!sortWrapper.contains(e.target)) {
+    closeSortMenu();
+  }
+
+  // tutup suggestion kalau klik di luar search box
+  if (searchBoxWrap && !searchBoxWrap.contains(e.target)) {
+    hideSearchSuggestions();
+  }
+});
+
+if (searchInput) {
+  searchInput.addEventListener("blur", () => {
+    // kasih sedikit delay biar klik di suggestion masih kebaca
+    setTimeout(() => {
+      if (!document.activeElement || document.activeElement !== searchInput) {
+        hideSearchSuggestions();
+      }
+    }, 150);
+  });
+}
 
     function closePlayerInline() {
       playerSection.classList.remove("show");
@@ -3526,7 +3988,7 @@ if (heroCarousel) {
 
     function renderGrid() {
       updateModeButtons();
-
+updateSearchPlaceholder();
       if (state.category === "Cinematic" && !state.subFilter) {
         renderLabelSelection();
         return;
@@ -3658,11 +4120,85 @@ if (heroCarousel) {
       checkCarouselVisibility();
     }
 
-    searchInput.addEventListener("input", (e) => {
-      state.search = e.target.value.trim();
-      state.page = 1;
+searchInput.addEventListener("input", (e) => {
+  const value = e.target.value;
+
+  // ===== hanya suggestion =====
+  clearTimeout(searchSuggestTimer);
+  searchSuggestTimer = setTimeout(() => {
+    updateSearchSuggestions(value);
+  }, 700); // delay suggestion
+  
+  // JANGAN renderGrid di sini!
+  // JANGAN show shimmer di sini!
+});
+searchInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+
+    const value = searchInput.value.trim();
+
+    // Tutup suggestion
+    hideSearchSuggestions();
+
+    // Tampilkan shimmer (opsional)
+    showGridShimmer();
+
+    // Update state
+    state.search = value;
+    state.page = 1;
+
+    // Render hasil
+    setTimeout(() => {
       renderGrid();
+      hideGridShimmer();
+    }, 1000); // biar keliatan smooth
+  }
+});
+
+
+
+
+
+
+if (searchInput) {
+  searchInput.addEventListener("keydown", (e) => {
+    if (!searchSuggestionsEl || searchSuggestionsEl.style.display === "none") return;
+
+    const list = searchSuggestionsEl._currentList || [];
+    if (!list.length) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      suggestionActiveIndex = (suggestionActiveIndex + 1) % list.length;
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      suggestionActiveIndex = (suggestionActiveIndex - 1 + list.length) % list.length;
+    } else if (e.key === "Enter") {
+      if (suggestionActiveIndex >= 0 && suggestionActiveIndex < list.length) {
+        e.preventDefault();
+        const item = list[suggestionActiveIndex];
+        if (item && typeof item.action === "function") {
+          item.action();
+        }
+        hideSearchSuggestions();
+      }
+      return;
+    } else if (e.key === "Escape") {
+      hideSearchSuggestions();
+      return;
+    } else {
+      return; // biarin tombol lain jalan normal
+    }
+
+    // update class .active
+    const els = searchSuggestionsEl.querySelectorAll(".search-suggestion-item");
+    els.forEach((el, idx) => {
+      el.classList.toggle("active", idx === suggestionActiveIndex);
     });
+  });
+}
+
 
     function updateWideButton() {
       const mode = playerSection.dataset.mode || "normal";
@@ -3945,11 +4481,14 @@ if (playerBackBtn) {
       e.preventDefault();
     });
 
-    // INIT
-  // INIT
+ // INIT
 applyResponsivePerPage();
+buildSearchIndex();        // 🔥 bikin index suggestion
 renderFilters();
+updateSearchPlaceholder();
 renderGrid();
+
+
 
   </script>
 </body>
