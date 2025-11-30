@@ -2175,7 +2175,7 @@
     <div class="info-row">
       <div id="videoInfo">
         <strong id="countText">0</strong>
-        <span id="countSuffix"> video ditemukan</span> 
+        <span id="countSuffix"> video ditemukan di</span> 
         <span id="modeLabel">Semua video</span>
       </div>
       <div id="filterInfo">
@@ -2564,50 +2564,47 @@ function buildSearchIndex() {
     }
 
     // 🏷 label
-    if (label) {
-      searchIndex.push({
-        type: "label",
-        query: label.toLowerCase(),
-        display: label,
-        meta: "Label",
-        extra: "",
-        action: () => {
-          // langsung buka folder label
-          state.mode = "all";
-          state.category = "Cinematic";
-          state.subFilter = { type: "label", value: label };
-          state.page = 1;
-          searchInput.value = "";
-          state.search = "";
-          hideSearchSuggestions();
-          renderFilters();
-          renderGrid();
-        }
-      });
+   if (label) {
+  searchIndex.push({
+    type: "label",
+    query: label.toLowerCase(),
+    display: label,
+    meta: "Label",
+    extra: "",
+    action: () => {
+      // langsung buka folder label
+      state.mode = "all";
+      state.category = "Cinematic";
+      state.subFilter = { type: "label", value: label };
+      state.page = 1;
+      // ❌ jangan utak-atik searchInput di sini, sudah di-handle applySuggestionItem
+      state.search = "";
+      renderFilters();
+      renderGrid();
     }
+  });
+}
 
-    // 🎭 artis
-    if (actress) {
-      searchIndex.push({
-        type: "artist",
-        query: actress.toLowerCase(),
-        display: actress,
-        meta: "Artis",
-        extra: "",
-        action: () => {
-          // langsung buka folder artis
-          state.mode = "all";
-          state.category = "Relax";
-          state.subFilter = { type: "artist", value: actress };
-          state.page = 1;
-          searchInput.value = "";
-          state.search = "";
-          hideSearchSuggestions();
-          renderFilters();
-          renderGrid();
-        }
-      });
+if (actress) {
+  searchIndex.push({
+    type: "artist",
+    query: actress.toLowerCase(),
+    display: actress,
+    meta: "Artis",
+    extra: "",
+    action: () => {
+      // langsung buka folder artis
+      state.mode = "all";
+      state.category = "Relax";
+      state.subFilter = { type: "artist", value: actress };
+      state.page = 1;
+      state.search = "";
+      renderFilters();
+      renderGrid();
     }
+  });
+}
+
 
     // 🔢 kode video
     if (kode) {
@@ -2723,44 +2720,41 @@ function updateSearchSuggestions(query) {
 function applySuggestionItem(item) {
   if (!item) return;
 
-  // 🔹 1. Atur tampilan kolom search
   if (searchInput) {
-    if (item.type === "title" || item.type === "kode") {
-      // judul / kode → tampil di textbox
-      searchInput.value = item.display;
-      state.search = item.display;
-      state.page = 1;
+    // 🔹 Selalu pakai teks utama suggestion buat isi search bar
+    searchInput.value = item.display;
+    searchInput.setAttribute("placeholder", "");
+    state.page = 1;
 
-      // kosongkan placeholder biar yang kelihatan cuma teks ini
-      searchInput.setAttribute("placeholder", "");
-    } else if (item.type === "label" || item.type === "artist") {
-      // label & artis: kita serahkan ke action() (buka folder)
-      searchInput.value = "";
+    // 🔹 Hanya title/kode yang dipakai sebagai search text
+    if (item.type === "title" || item.type === "kode") {
+      state.search = item.display;
+    } else {
+      // label & artist pakai folder filter, jadi search dikosongin aja
       state.search = "";
-      state.page = 1;
     }
 
-    // toggle tombol X
+    // 🔹 Nyalain tombol X kalau ada teks
     if (searchClearBtn) {
       searchClearBtn.style.display =
         searchInput.value.trim() ? "inline-flex" : "none";
     }
   }
 
-  // 🔹 2. Shimmer + eksekusi action
-  showGridShimmer();
+  // 🔹 Tutup dropdown + kasih efek shimmer
   hideSearchSuggestions();
+  showGridShimmer();
 
   setTimeout(() => {
     if (typeof item.action === "function") {
-      item.action();    // ini yang buka folder / set state / renderGrid
+      item.action();   // buka folder / filter / dsb
     } else {
-      // fallback kalau suatu saat ada item tanpa action
       renderGrid();
     }
     hideGridShimmer();
-  }, 700); // kalau mau lebih cepat, kecilin aja
+  }, 700);
 }
+
 
 // 🔧 Atur jumlah video per halaman sesuai ukuran layar
 function applyResponsivePerPage() {
@@ -4213,10 +4207,14 @@ searchInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
 
-    const value = searchInput.value.trim();
+    // 🔥 stop rencana suggestion yang masih pending
+    clearTimeout(searchSuggestTimer);
+    searchSuggestTimer = null;
 
-    // Tutup suggestion
+    // Tutup suggestion yang mungkin lagi kebuka
     hideSearchSuggestions();
+
+    const value = searchInput.value.trim();
 
     // Tampilkan shimmer (opsional)
     showGridShimmer();
@@ -4229,9 +4227,10 @@ searchInput.addEventListener("keydown", (e) => {
     setTimeout(() => {
       renderGrid();
       hideGridShimmer();
-    }, 1000); // biar keliatan smooth
+    }, 1000);
   }
 });
+
 
 
 
