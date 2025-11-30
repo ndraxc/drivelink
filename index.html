@@ -1186,6 +1186,12 @@
     background-color: #e81d27 !important; /* merah saat aktif */
   }
 }
+@media (max-width: 480px) {
+  .search-clear-btn {
+    margin-left: -12px!important;
+  }
+}
+
     /* PLAYER EXTRA: DOWNLOAD + PLAYLIST + TAG */
     .player-extra {
       margin-top: 6px;
@@ -1986,6 +1992,15 @@
   font-size: 0.82rem;
   display: none; /* default hidden */
 }
+@media (max-width: 480px) {
+  .pagination button {
+    min-width: 50px !important;
+    min-height: 45px !important;
+    padding: 0 16px !important;
+    font-size: 17px !important;
+    border-radius: 14px !important;
+  }
+}
 
 /* 1 item suggestion */
 .search-suggestion-item {
@@ -2023,6 +2038,32 @@
   display: flex;
   gap: 6px;
   align-items: center;
+}
+@media (max-width: 480px) {
+  /* kasih ruang ekstra di kanan buat X */
+  .search-box {
+    padding-right: 32px !important;
+  }
+
+  .search-clear-btn {
+    position: absolute !important;
+    right: 10px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+
+    margin-left: 0 !important;
+    /* ukuran fix biar nggak ngedorong tinggi */
+    width: 18px !important;
+    height: 18px !important;
+
+    display: none; /* JS kamu masih pakai inline-flex nanti */
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 !important;
+    font-size: 14px !important;
+    line-height: 1 !important;
+  }
 }
 
 .search-suggestion-chip {
@@ -2819,7 +2860,7 @@ const searchClearBtn = document.getElementById("searchClearBtn");
     state.subFilter &&
     state.subFilter.type === "label"
   ) {
-    text = `Cari video di label ${state.subFilter.value}...`;
+    text = `Cari video dilabel ${state.subFilter.value}...`;
   }
 
   // 🎭 Di dalam folder artis
@@ -3032,7 +3073,7 @@ function pauseAutoCarousel() {
       openPlayerInline(randomVideo.id);
     }
     
- function renderCarousel() {
+function renderCarousel() {
   heroCarousel.innerHTML = "";
 
   const isFolderLabel =
@@ -3052,7 +3093,16 @@ function pauseAutoCarousel() {
   let folderName = "";
   let totalFolderVideos = 0;
 
-  // 📂 MODE FOLDER LABEL / ARTIS (baik dari all / playlist / history)
+  // 🔎 cek apakah benar-benar di halaman beranda root
+  const isRootHome =
+    state.mode === "all" &&
+    state.category === "Semua" &&
+    !state.subFilter;
+
+  // flag buat tahu kita pakai history atau fallback
+  let usedHistorySlides = false;
+
+  // 📂 MODE FOLDER LABEL / ARTIS (di semua mode: all/playlist/history)
   if (isFolderLabel || isFolderArtist) {
     const target = (state.subFilter.value || "").toLowerCase();
     const folderVideos = baseList
@@ -3072,23 +3122,46 @@ function pauseAutoCarousel() {
     }
   }
 
-  // 🏠 MODE HOME HISTORY (kalau bukan folder label/artis)
+  // 🏠 MODE HOME (history + fallback 3 video terbaru)
   if (contextType === "history") {
-    const historyIds = getHistory().slice(0, 3);
-    slides = historyIds
-      .map(id => videos.find(v => v.id === id))
+    const baseList = getModeBaseList()
+      .slice()
+      .sort((a, b) => parseDate(b.date) - parseDate(a.date)); // terbaru duluan
+
+    const historyIds = getHistory(); // urutan sudah dari terbaru
+    const historyVideos = historyIds
+      .map(id => baseList.find(v => v.id === id))
       .filter(Boolean);
+
+    let resultSlides = [];
+
+    if (historyVideos.length > 0) {
+      // 🔥 Slide pertama = video terakhir ditonton
+      resultSlides.push(historyVideos[0]);
+
+      // 🔥 Tambahkan video lain sampai total 3 slide
+      const usedIds = new Set(resultSlides.map(v => v.id));
+      const extraVideos = baseList.filter(v => !usedIds.has(v.id));
+
+      const need = 3 - resultSlides.length;
+      if (need > 0) {
+        resultSlides = resultSlides.concat(extraVideos.slice(0, need));
+      }
+    } else {
+      // 🔥 User baru → ambil 3 video terbaru
+      resultSlides = baseList.slice(0, 3);
+    }
+
+    slides = resultSlides;
   }
-  // 🔍 cek apakah benar-benar di halaman beranda (root home)
-  const isRootHome =
-    state.mode === "all" &&
-    state.category === "Semua" &&
-    !state.subFilter;
 
   // label tombol play di hero
-  const watchLabel = isRootHome ? "Tonton lagi" : "Tonton";
+  const watchLabel =
+    contextType === "history"
+      ? (isRootHome && usedHistorySlides ? "Tonton lagi" : "Tonton")
+      : "Tonton";
 
-  // Kalau nggak ada bahan slide → matikan carousel + timer
+  // Kalau nggak ada slide sama sekali → matikan carousel
   if (!slides.length) {
     heroCarousel.classList.add("is-hidden");
     clearCarouselTimers();
@@ -3140,33 +3213,28 @@ function pauseAutoCarousel() {
       `;
     }
 
-  slidesHTML += `
-  <div class="hero-slide${activeClass}" data-index="${index}" data-video-id="${vid.id}">
-    <img src="${vid.thumb}" class="hero-bg-img" alt="${vid.title}">
-    <div class="hero-overlay-gradient"></div>
+    slidesHTML += `
+      <div class="hero-slide${activeClass}" data-index="${index}" data-video-id="${vid.id}">
+        <img src="${vid.thumb}" class="hero-bg-img" alt="${vid.title}">
+        <div class="hero-overlay-gradient"></div>
 
-    <div class="hero-content">
+        <div class="hero-content">
+          <div class="hero-meta">
+            <span>${metaLine}</span>
+          </div>
 
-      <!-- 🔥 Badge Last Watched -->
-      <div class="hero-lastwatch" style="display:none;">Terakhir ditonton</div>
+          <h2 class="hero-title">${titleText}</h2>
+          <div class="hero-desc">${descText}</div>
 
-      <div class="hero-meta">
-        <span>${metaLine}</span>
+          <div class="hero-actions">
+            <button class="hero-btn hero-btn-primary" onclick="openPlayerInline(${vid.id})">
+              ▶ ${watchLabel}
+            </button>
+            ${secondaryBtn}
+          </div>
+        </div>
       </div>
-
-      <h2 class="hero-title">${titleText}</h2>
-      <div class="hero-desc">${descText}</div>
-
-      <div class="hero-actions">
-        <button class="hero-btn hero-btn-primary" onclick="openPlayerInline(${vid.id})">
-          ▶ ${watchLabel}
-        </button>
-        ${secondaryBtn}
-      </div>
-    </div>
-  </div>
-`;
-
+    `;
 
     indicatorsHTML += `
       <div class="hero-dot${activeClass}" onclick="userSwitchSlide(${index})"></div>
@@ -3184,6 +3252,7 @@ function pauseAutoCarousel() {
 
   startCarouselInterval(heroSlideCount);
 }
+
 
     function goToPlaylistFromCarousel() {
       if (playerSection.classList.contains("show")) {
@@ -3239,17 +3308,21 @@ const isFolderArtist =
         return;
       }
 
-      if (
-        !isPlayerOpen &&
-        (
-          (isRootHome && hasHistory) ||
-          ((isFolderLabel || isFolderArtist) && hasFolderVideos)
-        )
-      ) {
-        heroCarousel.classList.remove("is-hidden");
-      } else {
-        heroCarousel.classList.add("is-hidden");
-      }
+   if (
+    !isPlayerOpen &&
+    (
+      // 🔥 Beranda: SELALU boleh tampil (history ada / tidak),
+      // karena sekarang renderCarousel sudah punya fallback 3 video terbaru
+      isRootHome ||
+      // 📂 Folder label / artis: tetap butuh video di folder tsb
+      ((isFolderLabel || isFolderArtist) && hasFolderVideos)
+    )
+  ) {
+    heroCarousel.classList.remove("is-hidden");
+  } else {
+    heroCarousel.classList.add("is-hidden");
+  }
+
     }
 
 function startCarouselInterval(count) {
