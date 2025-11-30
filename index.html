@@ -1970,7 +1970,6 @@
   position: relative;
 }
 
-/* 🔽 Container dropdown */
 .search-suggestions {
   position: absolute;
   top: 100%;
@@ -1981,17 +1980,30 @@
   padding: 6px 0;
   border-radius: 12px;
 
-  background: rgba(7, 7, 12, 0.96);
-  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(18px);
+  /* 🔥 Samakan background dengan search-box */
+  background: var(--card-bg); 
+  box-shadow: 0 0 0 1px var(--border-light), 0 10px 25px rgba(0,0,0,0.35);
 
   max-height: 260px;
   overflow-y: auto;
   z-index: 30;
 
   font-size: 0.82rem;
-  display: none; /* default hidden */
+  display: none;
 }
+.search-suggestion-chip {
+  display: none !important;
+}
+@media (max-width: 480px) {
+  .search-box input {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: block !important;
+    max-width: 100% !important;
+  }
+}
+
 @media (max-width: 480px) {
   .pagination button {
     min-width: 50px !important;
@@ -2748,8 +2760,26 @@ function updateSearchSuggestions(query) {
     return;
   }
 
-  // ambil maksimal 8 hasil
-  const filtered = searchIndex
+  // 🔍 cek posisi sekarang
+  const isLabelRoot =
+    state.category === "Cinematic" && !state.subFilter; // tab LABEL (folder)
+  const isArtistRoot =
+    state.category === "Relax" && !state.subFilter;      // tab ARTIS (folder)
+
+  // 🔧 base list suggestion sesuai context
+  let baseList = searchIndex;
+
+  if (isLabelRoot) {
+    // lagi lihat daftar folder label → cuma tampilkan suggestion type "label"
+    baseList = baseList.filter(item => item.type === "label");
+  } else if (isArtistRoot) {
+    // lagi lihat daftar folder artis → cuma tampilkan suggestion type "artist"
+    baseList = baseList.filter(item => item.type === "artist");
+  }
+  // kalau posisi lain (home, playlist, history, dalam folder) → pakai semua type
+
+  // ambil maksimal 8 hasil yang match query
+  const filtered = baseList
     .filter(item => item.query.includes(q))
     .slice(0, 8);
 
@@ -2758,6 +2788,7 @@ function updateSearchSuggestions(query) {
   // simpan list yg dipakai terakhir untuk keyboard nav
   searchSuggestionsEl._currentList = filtered;
 }
+
 function applySuggestionItem(item) {
   if (!item) return;
 
@@ -3202,13 +3233,13 @@ function renderCarousel() {
     if (contextType === "folder-label") {
       secondaryBtn = `
         <button class="hero-btn hero-btn-pink-outline" onclick="shuffleFolder('label','${safeName}')">
-          🔀 Acak semua ${folderKind.toLowerCase()}
+          🔀 Putar Random ${folderKind.toLowerCase()}
         </button>
       `;
     } else if (contextType === "folder-artist") {
       secondaryBtn = `
         <button class="hero-btn hero-btn-pink-outline" onclick="shuffleFolder('artist','${safeName}')">
-          🔀 Acak semua ${folderKind.toLowerCase()}
+          🔀 Putar Random ${folderKind.toLowerCase()}
         </button>
       `;
     }
