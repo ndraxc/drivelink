@@ -60,83 +60,6 @@
       --text-white: #000000 !important; 
       --muted: #323232 !important;
     }
-    .card-remove-btn {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  z-index: 3;
-  width: 24px;
-  height: 24px;
-  border-radius: 999px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.theme-dark .card-remove-btn {
-  background: rgba(0,0,0,0.8);
-  color: #ff6b6b;
-}
-
-.theme-light .card-remove-btn {
-  background: rgba(255,255,255,0.9);
-  color: #c0392b;
-}
-
-/* Popup very basic */
-.confirm-popup {
-  position: fixed;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(4px);
-  background: rgba(0,0,0,0.5);
-  z-index: 999;
-}
-
-.confirm-popup-inner {
-  max-width: 320px;
-  padding: 16px 18px;
-  border-radius: 14px;
-}
-
-.theme-dark .confirm-popup-inner {
-  background: #151515;
-  color: #f3f3f3;
-}
-
-.theme-light .confirm-popup-inner {
-  background: #ffffff;
-  color: #222;
-}
-
-.confirm-popup-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.confirm-btn {
-  border-radius: 999px;
-  padding: 6px 14px;
-  border: none;
-  cursor: pointer;
-}
-
-.confirm-btn.cancel {
-  opacity: 0.8;
-}
-
-.confirm-btn.ok {
-  font-weight: 600;
-}
-
 @media (max-width: 480px) {
   .search-clear-btn {
    margin-left: -12px;   /* geser dikit dari tepi kanan */
@@ -618,6 +541,29 @@
     opacity 0.22s ease-out,
     box-shadow 0.22s ease-out;
 }
+@media (max-width: 480px) {
+
+  /* JAM */
+  .time-row {
+    display: flex !important;
+    width: 100% !important;
+  }
+  .time-row > * {
+    margin-left: auto !important;
+  }
+
+  /* URUTKAN */
+  .sort-row {
+    display: flex !important;
+    width: 100% !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+  }
+  .sort-row > * {
+    margin-left: auto !important;
+  }
+
+}
 
 /* ===== Dot Aktif (Netflix-style Red Pill) ===== */
 .hero-dot.active {
@@ -642,6 +588,47 @@
 }
 .grid-separator {
   display: none !important;
+}
+@media (max-width: 383px) {
+  /* 🔥 Sembunyikan chip yang mengandung text "Artis:" atau "Label:" */
+  .filter-chip:has(span),
+  .filter-chip:has(*) {
+    /* fallback untuk selector text */
+  }
+
+  /* Cara pasti: pakai attribute selector contains */
+  .filter-chip[data-type="artist"],
+  .filter-chip[data-type="label"] {
+    display: none !important;
+  }
+}
+/* 🔥 SEMUA PERUBAHAN INI AKTIF DI LAYAR < 383px */
+@media (max-width: 383px) {
+
+  /* --- 1. SEMBUNYIKAN JAM --- */
+  .header-time-row,
+  .time-row,
+  .time-pill,
+  .time-chip {
+    display: none !important;
+  }
+
+  /* --- 2. SEMBUNYIKAN URUTKAN --- */
+  .sort-row,
+  .sort-container,
+  .sort-wrapper,
+  .sort-label,
+  .sort-trigger {
+    display: none !important;
+  }
+
+
+
+}
+@media (max-width: 383px) {
+  .filter-chip:has(:where(*:contains("Artis:"), *:contains("Label:"))) {
+    display: none !important;
+  }
 }
 
     
@@ -2090,6 +2077,11 @@
     border-radius: 14px !important;
   }
 }
+@media (max-width: 383px) {
+  .filter-chip:has(:where(*:contains("Artis:"), *:contains("Label:"))) {
+    display: none !important;
+  }
+}
 
 /* 1 item suggestion */
 .search-suggestion-item {
@@ -2249,10 +2241,6 @@
       <div class="header-right">
         <button class="header-small-btn" id="homeBtn">🏠 Home</button>
         <button class="header-small-btn" id="playlistBtn">📁 Playlist</button>
-         <!-- 🔥 Tombol edit playlist -->
-  <button class="header-small-btn" id="playlistEditToggle" style="display:none;">
-    ✏️ Edit
-  </button>
         <button class="header-small-btn" id="historyBtn">🕒 History</button>
         <button class="theme-toggle" id="themeToggle">
           <span id="themeIcon">🌙</span>
@@ -2432,25 +2420,8 @@
       <div id="pagination"></div>
     </div>
   </div>
-<!-- 🔥 Popup konfirmasi hapus dari playlist -->
-<div id="confirmPopup" class="confirm-popup" style="display:none;">
-  <div class="confirm-popup-inner">
-    <div class="confirm-popup-text" id="confirmPopupText">
-      Yakin video di playlist mau dihapus?
-    </div>
-    <div class="confirm-popup-actions">
-      <button type="button" id="confirmCancelBtn" class="confirm-btn cancel">
-        Batal
-      </button>
-      <button type="button" id="confirmOkBtn" class="confirm-btn ok">
-        Ya, hapus
-      </button>
-    </div>
-  </div>
-</div>
 
-<div id="toast"></div>
-
+  <div id="toast"></div>
 
   <script>
 const gridShimmerEl = document.getElementById("gridShimmer");
@@ -2948,7 +2919,6 @@ window.addEventListener("resize", () => {
   }, 200); // kecilin spam render saat user resize
 });
 
-const playlistEditToggle = document.getElementById("playlistEditToggle");
 
     const gridEl = document.getElementById("grid");
     const emptyEl = document.getElementById("emptyState");
@@ -3063,14 +3033,6 @@ const searchClearBtn = document.getElementById("searchClearBtn");
     // stack riwayat video di player (buat tombol Back)
     let playerHistoryStack = [];
     let isNavigatingBack = false;
-    let isEditingPlaylist = false;     // 🔥 mode edit playlist aktif / tidak
-
-// Untuk popup konfirmasi
-const confirmPopup = document.getElementById("confirmPopup");
-const confirmPopupText = document.getElementById("confirmPopupText");
-const confirmCancelBtn = document.getElementById("confirmCancelBtn");
-const confirmOkBtn = document.getElementById("confirmOkBtn");
-let pendingRemoveId = null;        // id video yang mau dihapus
 
     // 🔙 untuk kembali ke preview setelah close hashtag
     let lastHashtagSourceId = null;
@@ -3835,30 +3797,17 @@ if (heroCarousel) {
     }
 
     function updateModeButtons() {
-  playlistBtn.classList.toggle("active", state.mode === "playlist");
-  historyBtn.classList.toggle("active", state.mode === "history");
+      playlistBtn.classList.toggle("active", state.mode === "playlist");
+      historyBtn.classList.toggle("active", state.mode === "history");
 
-  if (state.mode === "playlist") {
-    modeLabelEl.textContent = "Playlist";
-  } else if (state.mode === "history") {
-    modeLabelEl.textContent = "History";
-  } else {
-    modeLabelEl.textContent = "Semua video";
-  }
-
-  // 🔥 Atur visibilitas tombol Edit Playlist
-  if (playlistEditToggle) {
-    if (state.mode === "playlist") {
-      playlistEditToggle.style.display = "inline-flex";
-    } else {
-      playlistEditToggle.style.display = "none";
-      isEditingPlaylist = false;
-      playlistEditToggle.classList.remove("active");
-      playlistEditToggle.textContent = "✏️ Edit";
+      if (state.mode === "playlist") {
+        modeLabelEl.textContent = "Playlist";
+      } else if (state.mode === "history") {
+        modeLabelEl.textContent = "History";
+      } else {
+        modeLabelEl.textContent = "Semua video";
+      }
     }
-  }
-}
-
 
     function setSort(value) {
       state.sort = value;
@@ -4008,53 +3957,6 @@ if (searchInput) {
     playlistBtn.addEventListener("click", togglePlaylistMode);
     historyBtn.addEventListener("click", toggleHistoryMode);
     homeBtn.addEventListener("click", goHome);
-
-    if (playlistEditToggle) {
-  playlistEditToggle.addEventListener("click", () => {
-    if (state.mode !== "playlist") return;
-
-    // toggle mode edit
-    isEditingPlaylist = !isEditingPlaylist;
-
-    playlistEditToggle.classList.toggle("active", isEditingPlaylist);
-    playlistEditToggle.textContent = isEditingPlaylist ? "✅ Selesai" : "✏️ Edit";
-
-    // re-render grid biar tombol "-" muncul / hilang
-    renderGrid();
-  });
-}
-
-function openConfirmRemoveFromPlaylist(videoId) {
-  pendingRemoveId = videoId;
-  if (confirmPopup) {
-    confirmPopup.style.display = "flex"; // atau block, nanti diatur di CSS
-  }
-}
-
-function closeConfirmRemoveFromPlaylist() {
-  pendingRemoveId = null;
-  if (confirmPopup) {
-    confirmPopup.style.display = "none";
-  }
-}
-
-// Event button popup
-if (confirmCancelBtn) {
-  confirmCancelBtn.addEventListener("click", () => {
-    closeConfirmRemoveFromPlaylist();
-  });
-}
-
-if (confirmOkBtn) {
-  confirmOkBtn.addEventListener("click", () => {
-    if (pendingRemoveId != null) {
-      // 🔥 pakai fungsi existing togglePlaylist biar sekalian update storage + toast
-      togglePlaylist(pendingRemoveId);
-    }
-    closeConfirmRemoveFromPlaylist();
-  });
-}
-
 
     function togglePlaylist(videoId) {
       const pl = getPlaylist();
@@ -4391,77 +4293,52 @@ updateSearchPlaceholder();
       const itemsPerRow = 5;
 
       pageItems.forEach((video, index) => {
-  const catKind = categoryLabelMap[video.category] || video.category;
-  let metaText = catKind;
-  if (catKind === "Label") {
-    metaText = video.label || "Label";
-  } else if (catKind === "Artis") {
-    metaText = video.actress || "Artis";
-  }
+        const catKind = categoryLabelMap[video.category] || video.category;
+        let metaText = catKind;
+        if (catKind === "Label") {
+          metaText = video.label || "Label";
+        } else if (catKind === "Artis") {
+          metaText = video.actress || "Artis";
+        }
 
-  const card = document.createElement("div");
-  card.className = "card";
-  card.dataset.id = video.id;
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.id = video.id;
 
-  // 🔥 Tampilkan tombol "-" hanya di mode playlist + edit aktif
-  const showRemoveBtn = state.mode === "playlist" && isEditingPlaylist;
+        card.innerHTML = `
+          <div class="thumb-wrapper">
+            <img class="thumb" src="${video.thumb}" alt="${video.title}" />
+            <div class="thumb-overlay">
+              <div class="play-pill">
+                <div class="play-icon">▶</div>
+                <span>Tonton</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-main">
+            <div class="card-title">${video.title}</div>
+            <div class="card-meta">
+              <span>${metaText}</span>
+            </div>
+          </div>
+        `;
 
-  card.innerHTML = `
-    <div class="thumb-wrapper">
-      ${showRemoveBtn ? `
-        <button 
-          type="button" 
-          class="card-remove-btn" 
-          data-id="${video.id}" 
-          title="Hapus dari playlist"
-        >−</button>
-      ` : ""}
-      <img class="thumb" src="${video.thumb}" alt="${video.title}" />
-      <div class="thumb-overlay">
-        <div class="play-pill">
-          <div class="play-icon">▶</div>
-          <span>Tonton</span>
-        </div>
-      </div>
-    </div>
-    <div class="card-main">
-      <div class="card-title">${video.title}</div>
-      <div class="card-meta">
-        <span>${metaText}</span>
-      </div>
-    </div>
-  `;
+        card.addEventListener("click", () => {
+          openPlayerInline(video.id);
+        });
 
-  card.addEventListener("click", () => {
-    openPlayerInline(video.id);
-  });
+        gridEl.appendChild(card);
 
-  gridEl.appendChild(card);
-// 🔥 Pasang event untuk tombol "-" kalau lagi mode edit playlist
-if (state.mode === "playlist" && isEditingPlaylist) {
-  const removeButtons = gridEl.querySelectorAll(".card-remove-btn");
-  removeButtons.forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation(); // jangan buka player
-      const id = parseInt(btn.dataset.id, 10);
-      if (!isNaN(id)) {
-        openConfirmRemoveFromPlaylist(id);
-      }
-    });
-  });
-}
-
-  if ((index + 1) % itemsPerRow === 0 && index !== pageItems.length - 1) {
-    const sep = document.createElement("div");
-    sep.className = "grid-separator";
-    sep.innerHTML = `
-      <span class="grid-separator-line"></span>
-      <span class="grid-separator-line"></span>
-    `;
-    gridEl.appendChild(sep);
-  }
-});
-
+        if ((index + 1) % itemsPerRow === 0 && index !== pageItems.length - 1) {
+          const sep = document.createElement("div");
+          sep.className = "grid-separator";
+          sep.innerHTML = `
+            <span class="grid-separator-line"></span>
+            <span class="grid-separator-line"></span>
+          `;
+          gridEl.appendChild(sep);
+        }
+      });
 
       gridEl.classList.remove("list-view");
 
