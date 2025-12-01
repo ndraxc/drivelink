@@ -60,55 +60,6 @@
       --text-white: #000000 !important; 
       --muted: #323232 !important;
     }
-    /* 🔥 Atur baris search + jam + urutkan di mobile */
-@media (max-width: 480px) {
-  .top-controls-row {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto auto !important;
-    column-gap: 8px !important;
-    align-items: center !important;
-  }
-
-  /* Search tetap fleksibel tapi nggak melebar aneh */
-  .top-controls-row .search-box {
-    width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  /* Jam (biasanya pakai pill-badge) jangan ikut melebar */
-  .top-controls-row .pill-badge {
-    white-space: nowrap !important;
-    flex-shrink: 0 !important;
-  }
-
-  /* Tombol urutkan tetap di kanan & nggak kepotong */
-  .top-controls-row .sort-wrapper {
-    flex-shrink: 0 !important;
-    white-space: nowrap !important;
-  }
-}
-@media (max-width: 480px) {
-  #clockDisplay,
-  .clock-pill {
-    white-space: nowrap !important;
-    flex-shrink: 0 !important;
-  }
-}
-/* 🔥 Sembunyikan jam di layar super kecil */
-@media (max-width: 365px) {
-  /* kalau jam kamu pakai pill-badge */
-  .top-controls-row .pill-badge {
-    display: none !important;
-  }
-
-  /* kalau jam punya id/class khusus, sikat juga */
-  .top-controls-row #clockDisplay,
-  .top-controls-row #clock,
-  .top-controls-row .clock-pill {
-    display: none !important;
-  }
-}
-
     .card-remove-btn {
   position: absolute;
   top: 6px;
@@ -651,85 +602,6 @@
 
   z-index: 5;
 }
-/* ---- ANIMASI PLAYLIST BTN ---- */
-
-/* efek saat ditambah ke playlist */
-.playlist-btn.playlist-anim-add {
-  animation: playlistAddPulse 0.45s ease-out;
-}
-
-@keyframes playlistAddPulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 1px var(--border-light);
-  }
-  35% {
-    transform: scale(1.08) translateY(-1px);
-    box-shadow: 0 0 0 1px var(--accent-red),
-                0 0 12px rgba(136, 136, 136, 0.7);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 1px var(--border-light);
-  }
-}
-
-/* efek halus saat dihapus dari playlist */
-.playlist-btn.playlist-anim-remove {
-  animation: playlistRemoveShake 0.38s ease-out;
-}
-
-@keyframes playlistRemoveShake {
-  0%   { transform: translateX(0); }
-  20%  { transform: translateX(-2px); }
-  40%  { transform: translateX(2px); }
-  60%  { transform: translateX(-1px); }
-  80%  { transform: translateX(1px); }
-  100% { transform: translateX(0); }
-}
-.playlist-btn.active {
-  animation: playlistBounce 0.55s cubic-bezier(.25,1.4,.5,1);
-  box-shadow: 0 0 0 1px var(--accent-red),
-              0 0 10px rgba(132, 132, 132, 0.35);
-  color: var(--accent-red);
-  position: relative;
-}
-
-/* Layer buat efek memudar */
-.playlist-btn.active::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-
-  animation: playlistRedFadeToGray 0.9s ease-out forwards;
-  opacity: 1;
-}
-
-/* 🔥 Loncat sedikit lebih tinggi */
-@keyframes playlistBounce {
-  0%   { transform: scale(1); }
-  30%  { transform: scale(1.06); }   /* ⭐ sedikit lebih tinggi */
-  65%  { transform: scale(0.97); }
-  100% { transform: scale(1); }
-}
-
-/* 🔥 warna merah → ke abu pelan-pelan */
-@keyframes playlistRedFadeToGray {
-  0% {
-    opacity: 1;
-    filter: brightness(1.1) saturate(1.2);
-  }
-  50% {
-    opacity: 0.6;
-    filter: brightness(0.95) saturate(0.4);
-  }
-  100% {
-    opacity: 0.3;
-    filter: brightness(0.9) saturate(0);  /* ⭐ saturate 0 = abu */
-  }
-}
 
 /* ===== Dot Default ===== */
 .hero-dot {
@@ -1200,7 +1072,6 @@
   .player-close-btn {
     border-radius: 7px !important;
   }
-  
 }
 @media (max-width: 480px) {
   #playerBackBtn,
@@ -1243,19 +1114,6 @@
     border-radius: inherit;
   }
 }
-@keyframes appleWiggleUltra {
-  0%   { transform: rotate(-0.4deg) translateY(0); }
-  25%  { transform: rotate(0.4deg) translateY(-0.3px); }
-  50%  { transform: rotate(-0.4deg) translateY(0.3px); }
-  75%  { transform: rotate(0.4deg) translateY(0); }
-  100% { transform: rotate(-0.4deg) translateY(0); }
-}
-
-.card-edit-wiggle {
-  animation: appleWiggleUltra 0.75s ease-in-out infinite;
-}
-
-
 
 
     .player-close-btn {
@@ -2359,12 +2217,6 @@
   0% { left: -100%; }
   100% { left: 100%; }
 }
-/* 🔥 Sembunyiin JAM di layar super kecil (<= 365px) */
-@media (max-width: 378px) {
-  .header-right .pill-badge {
-    display: none !important;
-  }
-}
 
   </style>
   <body class="theme-dark">
@@ -2398,7 +2250,9 @@
         <button class="header-small-btn" id="homeBtn">🏠 Home</button>
         <button class="header-small-btn" id="playlistBtn">📁 Playlist</button>
          <!-- 🔥 Tombol edit playlist -->
-
+  <button class="header-small-btn" id="playlistEditToggle" style="display:none;">
+    ✏️ Edit
+  </button>
         <button class="header-small-btn" id="historyBtn">🕒 History</button>
         <button class="theme-toggle" id="themeToggle">
           <span id="themeIcon">🌙</span>
@@ -2411,10 +2265,10 @@
             <span id="clockColon">:</span>
             <span id="clockMinutes">--</span>
           </span>
-        </div>  
         </div>
       </div>
-   
+    </div>
+
     <div id="heroCarousel" class="hero-section"></div>
 
     <div class="controls">
@@ -3209,92 +3063,7 @@ const searchClearBtn = document.getElementById("searchClearBtn");
     // stack riwayat video di player (buat tombol Back)
     let playerHistoryStack = [];
     let isNavigatingBack = false;
-    let isEditingPlaylist = false;  
-    // 🔥 Long press untuk masuk mode edit playlist
-let longPressTimer = null;
-let suppressCardClickOnce = false;
-const LONG_PRESS_DELAY = 600; // ms, lama tekan sebelum dianggap long press
-
-function attachLongPressToCard(card, videoId) {
-  let startX = 0;
-  let startY = 0;
-  let pointerActive = false;
-
-  const startPress = (clientX, clientY) => {
-    if (state.mode !== "playlist") return; // hanya di mode playlist
-    pointerActive = true;
-    startX = clientX;
-    startY = clientY;
-
-    longPressTimer = setTimeout(() => {
-      longPressTimer = null;
-      pointerActive = false;
-      suppressCardClickOnce = true; // 🔥 cegah klik langsung buka player
-
-      // toggle mode edit
-      isEditingPlaylist = !isEditingPlaylist;
-
-      // opsional: update tombol edit (walau hidden)
-      if (playlistEditToggle) {
-        playlistEditToggle.classList.toggle("active", isEditingPlaylist);
-        playlistEditToggle.textContent = isEditingPlaylist ? "✅ Selesai" : "✏️ Edit";
-      }
-
-      renderGrid();
-
-      showToast(
-        isEditingPlaylist
-          ? "Mode edit playlist aktif (tap tombol - untuk hapus)"
-          : "Mode edit playlist dimatikan"
-      );
-    }, LONG_PRESS_DELAY);
-  };
-
-  const cancelPress = () => {
-    pointerActive = false;
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      longPressTimer = null;
-    }
-  };
-
-  // TOUCH (mobile)
-  card.addEventListener(
-    "touchstart",
-    (e) => {
-      const t = e.touches[0];
-      startPress(t.clientX, t.clientY);
-    },
-    { passive: true }
-  );
-
-  card.addEventListener(
-    "touchmove",
-    (e) => {
-      if (!pointerActive) return;
-      const t = e.touches[0];
-      const dx = Math.abs(t.clientX - startX);
-      const dy = Math.abs(t.clientY - startY);
-      // kalau user geser jauh → batalin long press (anggap swipe)
-      if (dx > 10 || dy > 10) {
-        cancelPress();
-      }
-    },
-    { passive: true }
-  );
-
-  card.addEventListener("touchend", cancelPress);
-  card.addEventListener("touchcancel", cancelPress);
-
-  // MOUSE (desktop)
-  card.addEventListener("mousedown", (e) => {
-    startPress(e.clientX, e.clientY);
-  });
-
-  card.addEventListener("mouseup", cancelPress);
-  card.addEventListener("mouseleave", cancelPress);
-}
-// 🔥 mode edit playlist aktif / tidak
+    let isEditingPlaylist = false;     // 🔥 mode edit playlist aktif / tidak
 
 // Untuk popup konfirmasi
 const confirmPopup = document.getElementById("confirmPopup");
@@ -3550,11 +3319,12 @@ function renderCarousel() {
     let titleText = vid.title;
     let descText = vid.description || "";
 
-    if (contextType === "folder-artist") {
-    titleText = `#${folderName}`;
-  } else if (contextType === "folder-label") {
-    titleText = `#${folderName}`;
-  
+    if (contextType === "folder-label" || contextType === "folder-artist") {
+      metaLine = `${folderKind} • ${totalFolderVideos} video • ${year}`;
+      titleText = `${folderKind}: ${folderName}`;
+      descText = vid.description
+        ? `Video unggulan: ${vid.title} — ${vid.description}`
+        : `Koleksi video ${folderKind.toLowerCase()} ${folderName}.`;
     } else {
       metaLine = `${vid.category} • ${vid.duration} • ${year}`;
     }
@@ -4239,7 +4009,20 @@ if (searchInput) {
     historyBtn.addEventListener("click", toggleHistoryMode);
     homeBtn.addEventListener("click", goHome);
 
+    if (playlistEditToggle) {
+  playlistEditToggle.addEventListener("click", () => {
+    if (state.mode !== "playlist") return;
 
+    // toggle mode edit
+    isEditingPlaylist = !isEditingPlaylist;
+
+    playlistEditToggle.classList.toggle("active", isEditingPlaylist);
+    playlistEditToggle.textContent = isEditingPlaylist ? "✅ Selesai" : "✏️ Edit";
+
+    // re-render grid biar tombol "-" muncul / hilang
+    renderGrid();
+  });
+}
 
 function openConfirmRemoveFromPlaylist(videoId) {
   pendingRemoveId = videoId;
@@ -4616,59 +4399,44 @@ updateSearchPlaceholder();
     metaText = video.actress || "Artis";
   }
 
+  const card = document.createElement("div");
+  card.className = "card";
+  card.dataset.id = video.id;
+
+  // 🔥 Tampilkan tombol "-" hanya di mode playlist + edit aktif
   const showRemoveBtn = state.mode === "playlist" && isEditingPlaylist;
 
-  const card = document.createElement("div");
-const isEditModeCard = showRemoveBtn; // sama aja kondisi
-card.className = "card" + (isEditModeCard ? " card-edit-wiggle" : "");
-card.dataset.id = video.id;
-
-card.innerHTML = `
-  <div class="thumb-wrapper">
-    ${showRemoveBtn ? `
-      <button 
-        type="button" 
-        class="card-remove-btn" 
-        data-id="${video.id}" 
-        title="Hapus dari playlist"
-      >−</button>
-    ` : ""}
-    <img class="thumb" src="${video.thumb}" alt="${video.title}" />
-    <div class="thumb-overlay">
-      <div class="play-pill">
-        <div class="play-icon">▶</div>
-        <span>Tonton</span>
+  card.innerHTML = `
+    <div class="thumb-wrapper">
+      ${showRemoveBtn ? `
+        <button 
+          type="button" 
+          class="card-remove-btn" 
+          data-id="${video.id}" 
+          title="Hapus dari playlist"
+        >−</button>
+      ` : ""}
+      <img class="thumb" src="${video.thumb}" alt="${video.title}" />
+      <div class="thumb-overlay">
+        <div class="play-pill">
+          <div class="play-icon">▶</div>
+          <span>Tonton</span>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="card-main">
-    <div class="card-title">${video.title}</div>
-    <div class="card-meta">
-      <span>${metaText}</span>
+    <div class="card-main">
+      <div class="card-title">${video.title}</div>
+      <div class="card-meta">
+        <span>${metaText}</span>
+      </div>
     </div>
-  </div>
-`;
+  `;
 
-// 🔥 Klik biasa
-card.addEventListener("click", () => {
-  // kalau baru saja long-press → skip klik ini
-  if (suppressCardClickOnce) {
-    suppressCardClickOnce = false;
-    return;
-  }
+  card.addEventListener("click", () => {
+    openPlayerInline(video.id);
+  });
 
-  // kalau lagi edit playlist, klik card nggak buka player
-  if (state.mode === "playlist" && isEditingPlaylist) {
-    return;
-  }
-
-  openPlayerInline(video.id);
-});
-
-attachLongPressToCard(card, video.id); // 🔥 aktifkan long-press di card
-
-gridEl.appendChild(card);
-
+  gridEl.appendChild(card);
 // 🔥 Pasang event untuk tombol "-" kalau lagi mode edit playlist
 if (state.mode === "playlist" && isEditingPlaylist) {
   const removeButtons = gridEl.querySelectorAll(".card-remove-btn");
