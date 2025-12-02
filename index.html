@@ -2550,62 +2550,78 @@ function hideGridShimmer() {
     `;
 
     /* ====== VIDEO LIST ====== */
-    const videos = [
-      {
-        id: 1,
-        title: "City Night From Google Drive",
-        duration: "12:34",
-        durationSec: 12 * 60 + 34,
-        category: "Cinematic",
-        thumb: driveThumbnail(DRIVE_ID),
-        src: driveDirect(`https://drive.google.com/file/d/${DRIVE_ID}/view?usp=drive_link`),
-        embed: `https://drive.google.com/file/d/${DRIVE_ID}/preview`,
-        date: "2025-10-12",
-        description: "Contoh video yang diputar langsung dari Google Drive melalui galeri ini.",
-        kode: "MV-001",
-        studio: "City Studio",
-        label: "SOD Create",
-        actor: "John Doe",
-        actress: "Kamiki Rei",
-        size: "120 MB",
-        downloadUrl: driveDirect(DRIVE_ID)
-      },
-      {
-        id: 2,
-        title: "Cozy Rain on Window",
-        duration: "08:20",
-        durationSec: 8 * 60 + 20,
-        category: "Relax",
-        thumb: "https://images.pexels.com/photos/110874/pexels-photo-110874.jpeg?auto=compress&cs=tinysrgb&w=800",
-        src: "sample2.mp4",
-        date: "2025-09-20",
-        description: "Suasana hujan yang menenangkan, pas buat ambience kerja atau belajar.",
-        kode: "MV-002",
-        studio: "Calm Studio",
-        label: "START",
-        actor: "Adam Calm",
-        actress: "Remu Suzumori",
-        size: "85 MB",
-        downloadUrl: "sample2.mp4"
-      },
-      {
-        id: 3,
-        title: "Product Showcase Camera",
-        duration: "03:45",
-        durationSec: 3 * 60 + 45,
-        category: "Cinematic",
-        thumb: "https://images.pexels.com/photos/212372/pexels-photo-212372.jpeg?auto=compress&cs=tinysrgb&w=800",
-        src: "sample3.mp4",
-        date: "2025-10-05",
-        description: "Video b-roll kamera dengan lighting studio minimalis untuk konten promosi.",
-        kode: "MV-003",
-        studio: "Gear Studio",
-        label: "SONE",
-        actor: "Kevin Lens",
-        actress: "Suzu Honjou",
-        size: "60 MB",
-        downloadUrl: "sample3.mp4"
-      },
+const videos = [
+  /* ============================
+     ✅ 1. DVMM-292
+  ============================= */
+  {
+    id: 1,
+    title: "DVMM-292",
+    duration: "00:00",
+    durationSec: 0,
+    category: "Cinematic",
+    thumb: driveThumbnail("1RBzMXL1Mjt4l1E_48stODHCny9NAYI8z"),
+    src: driveDirect("https://drive.google.com/file/d/1RBzMXL1Mjt4l1E_48stODHCny9NAYI8z/view?usp=drive_link"),
+    embed: "https://drive.google.com/file/d/1RBzMXL1Mjt4l1E_48stODHCny9NAYI8z/preview",
+    date: "2025-01-01",
+    description: "Video DVMM-292",
+    kode: "DVMM-292",
+    studio: "Unknown",
+    label: "Unknown",
+    actor: "—",
+    actress: "—",
+    size: "—",
+    downloadUrl: driveDirect("1RBzMXL1Mjt4l1E_48stODHCny9NAYI8z")
+  },
+
+  /* ============================
+     ✅ 2. HSODA-052
+  ============================= */
+  {
+    id: 2,
+    title: "HSODA-052",
+    duration: "00:00",
+    durationSec: 0,
+    category: "Cinematic",
+    thumb: driveThumbnail("1n2bkvkgYdtGzbbOcTfHAYmZop0W5Q8Be"),
+    src: driveDirect("https://drive.google.com/file/d/1n2bkvkgYdtGzbbOcTfHAYmZop0W5Q8Be/view?usp=drive_link"),
+    embed: "https://drive.google.com/file/d/1n2bkvkgYdtGzbbOcTfHAYmZop0W5Q8Be/preview",
+    date: "2025-01-01",
+    description: "Video HSODA-052",
+    kode: "HSODA-052",
+    studio: "Unknown",
+    label: "Unknown",
+    actor: "—",
+    actress: "—",
+    size: "—",
+    downloadUrl: driveDirect("1n2bkvkgYdtGzbbOcTfHAYmZop0W5Q8Be")
+  },
+
+  /* ============================
+     ✅ 3. SDJS-200
+  ============================= */
+  {
+    id: 3,
+    title: "SDJS-200",
+    duration: "00:00",
+    durationSec: 0,
+    category: "Cinematic",
+    thumb: driveThumbnail("1n654H3AsLiycM1s4UNZZRVgpGiEf1o4m"),
+    src: driveDirect("https://drive.google.com/file/d/1n654H3AsLiycM1s4UNZZRVgpGiEf1o4m/view?usp=drive_link"),
+    embed: "https://drive.google.com/file/d/1n654H3AsLiycM1s4UNZZRVgpGiEf1o4m/preview",
+    date: "2025-01-01",
+    description: "Video SDJS-200",
+    kode: "SDJS-200",
+    studio: "Unknown",
+    label: "Unknown",
+    actor: "—",
+    actress: "—",
+    size: "—",
+    downloadUrl: driveDirect("1n654H3AsLiycM1s4UNZZRVgpGiEf1o4m")
+  },
+
+  /* ➤ LIST VIDEO LAIN TETAP LANJUTKAN DI BAWAH SINI */
+
       {
         id: 4,
         title: "Street Night Vibes",
