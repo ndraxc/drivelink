@@ -60,6 +60,98 @@
       --text-white: #000000 !important; 
       --muted: #323232 !important;
     }
+    #pagination .page-btn {
+  padding: 8px 15px !important;      /* naik sedikit */
+  font-size: 0.78rem !important;     /* naik tipis */
+  border-radius: 11px !important;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  #pagination .page-btn {
+    padding: 6px 13px !important;
+    font-size: 0.76rem !important;
+    border-radius: 10px !important;
+  }
+}
+
+    .card-remove-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-dark .card-remove-btn {
+  background: rgba(0,0,0,0.8);
+  color: #ff6b6b;
+}
+
+.theme-light .card-remove-btn {
+  background: rgba(255,255,255,0.9);
+  color: #c0392b;
+}
+
+/* Popup very basic */
+.confirm-popup {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+}
+
+.confirm-popup-inner {
+  max-width: 320px;
+  padding: 16px 18px;
+  border-radius: 14px;
+}
+
+.theme-dark .confirm-popup-inner {
+  background: #151515;
+  color: #f3f3f3;
+}
+
+.theme-light .confirm-popup-inner {
+  background: #ffffff;
+  color: #222;
+}
+
+.confirm-popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.confirm-btn {
+  border-radius: 999px;
+  padding: 6px 14px;
+  border: none;
+  cursor: pointer;
+}
+
+.confirm-btn.cancel {
+  opacity: 0.8;
+}
+
+.confirm-btn.ok {
+  font-weight: 600;
+}
+
 @media (max-width: 480px) {
   .search-clear-btn {
    margin-left: -12px;   /* geser dikit dari tepi kanan */
@@ -541,29 +633,6 @@
     opacity 0.22s ease-out,
     box-shadow 0.22s ease-out;
 }
-@media (max-width: 480px) {
-
-  /* JAM */
-  .time-row {
-    display: flex !important;
-    width: 100% !important;
-  }
-  .time-row > * {
-    margin-left: auto !important;
-  }
-
-  /* URUTKAN */
-  .sort-row {
-    display: flex !important;
-    width: 100% !important;
-    justify-content: flex-end !important;
-    align-items: center !important;
-  }
-  .sort-row > * {
-    margin-left: auto !important;
-  }
-
-}
 
 /* ===== Dot Aktif (Netflix-style Red Pill) ===== */
 .hero-dot.active {
@@ -588,47 +657,6 @@
 }
 .grid-separator {
   display: none !important;
-}
-@media (max-width: 383px) {
-  /* 🔥 Sembunyikan chip yang mengandung text "Artis:" atau "Label:" */
-  .filter-chip:has(span),
-  .filter-chip:has(*) {
-    /* fallback untuk selector text */
-  }
-
-  /* Cara pasti: pakai attribute selector contains */
-  .filter-chip[data-type="artist"],
-  .filter-chip[data-type="label"] {
-    display: none !important;
-  }
-}
-/* 🔥 SEMUA PERUBAHAN INI AKTIF DI LAYAR < 383px */
-@media (max-width: 383px) {
-
-  /* --- 1. SEMBUNYIKAN JAM --- */
-  .header-time-row,
-  .time-row,
-  .time-pill,
-  .time-chip {
-    display: none !important;
-  }
-
-  /* --- 2. SEMBUNYIKAN URUTKAN --- */
-  .sort-row,
-  .sort-container,
-  .sort-wrapper,
-  .sort-label,
-  .sort-trigger {
-    display: none !important;
-  }
-
-
-
-}
-@media (max-width: 383px) {
-  .filter-chip:has(:where(*:contains("Artis:"), *:contains("Label:"))) {
-    display: none !important;
-  }
 }
 
     
@@ -1659,6 +1687,10 @@
     height: 14px;
   }
 }
+.filter-chip.back-chip {
+  opacity: 0.85 !important;
+  font-weight: 500 !important;
+}
 
     .empty {
       margin-top: 18px;
@@ -2077,11 +2109,6 @@
     border-radius: 14px !important;
   }
 }
-@media (max-width: 383px) {
-  .filter-chip:has(:where(*:contains("Artis:"), *:contains("Label:"))) {
-    display: none !important;
-  }
-}
 
 /* 1 item suggestion */
 .search-suggestion-item {
@@ -2209,6 +2236,9 @@
   0% { left: -100%; }
   100% { left: 100%; }
 }
+.filter-chip.back-chip {
+  margin-left: auto !important; /* dorong ke kanan */
+}
 
   </style>
   <body class="theme-dark">
@@ -2241,6 +2271,7 @@
       <div class="header-right">
         <button class="header-small-btn" id="homeBtn">🏠 Home</button>
         <button class="header-small-btn" id="playlistBtn">📁 Playlist</button>
+
         <button class="header-small-btn" id="historyBtn">🕒 History</button>
         <button class="theme-toggle" id="themeToggle">
           <span id="themeIcon">🌙</span>
@@ -2420,8 +2451,25 @@
       <div id="pagination"></div>
     </div>
   </div>
+<!-- 🔥 Popup konfirmasi hapus dari playlist -->
+<div id="confirmPopup" class="confirm-popup" style="display:none;">
+  <div class="confirm-popup-inner">
+    <div class="confirm-popup-text" id="confirmPopupText">
+      Yakin video di playlist mau dihapus?
+    </div>
+    <div class="confirm-popup-actions">
+      <button type="button" id="confirmCancelBtn" class="confirm-btn cancel">
+        Batal
+      </button>
+      <button type="button" id="confirmOkBtn" class="confirm-btn ok">
+        Ya, hapus
+      </button>
+    </div>
+  </div>
+</div>
 
-  <div id="toast"></div>
+<div id="toast"></div>
+
 
   <script>
 const gridShimmerEl = document.getElementById("gridShimmer");
@@ -2919,6 +2967,7 @@ window.addEventListener("resize", () => {
   }, 200); // kecilin spam render saat user resize
 });
 
+const playlistEditToggle = document.getElementById("playlistEditToggle");
 
     const gridEl = document.getElementById("grid");
     const emptyEl = document.getElementById("emptyState");
@@ -3033,6 +3082,72 @@ const searchClearBtn = document.getElementById("searchClearBtn");
     // stack riwayat video di player (buat tombol Back)
     let playerHistoryStack = [];
     let isNavigatingBack = false;
+    let isEditingPlaylist = false;     // 🔥 mode edit playlist aktif / tidak
+  // 🔥 mode edit playlist aktif / tidak
+
+const LONG_PRESS_DURATION = 650;   // durasi tekan lama (ms)
+function enterPlaylistEditMode() {
+  if (isEditingPlaylist) return;           // kalau sudah edit mode, skip
+
+  if (state.mode !== "playlist") return;   // cuma boleh di halaman playlist
+
+  isEditingPlaylist = true;
+
+  // update tampilan tombol Edit (kalau kamu masih pakai)
+  if (playlistEditToggle) {
+    playlistEditToggle.classList.add("active");
+    playlistEditToggle.textContent = "✅ Selesai";
+    playlistEditToggle.style.display = "inline-flex";
+  }
+
+  renderGrid();
+  showToast("Mode edit playlist aktif");
+}
+
+/**
+ * Pasang behavior long-press ke card di playlist
+ */
+function attachLongPressForPlaylist(cardEl) {
+  let pressTimer = null;
+
+  const start = (e) => {
+    if (state.mode !== "playlist") return;
+    if (isEditingPlaylist) return; // kalau sudah edit, gak usah long-press lagi
+
+    // kalau yang diklik tombol "-" biarin aja (jangan hitung long press)
+    const target = e.target;
+    if (target && target.closest(".card-remove-btn")) return;
+
+    pressTimer = setTimeout(() => {
+      cardEl._longPressActivated = true;   // flag supaya click tidak buka player
+      enterPlaylistEditMode();
+    }, LONG_PRESS_DURATION);
+  };
+
+  const cancel = () => {
+    if (pressTimer) {
+      clearTimeout(pressTimer);
+      pressTimer = null;
+    }
+  };
+
+  // mouse
+  cardEl.addEventListener("mousedown", start);
+  cardEl.addEventListener("mouseup", cancel);
+  cardEl.addEventListener("mouseleave", cancel);
+
+  // touch
+  cardEl.addEventListener("touchstart", start, { passive: true });
+  cardEl.addEventListener("touchend", cancel);
+  cardEl.addEventListener("touchcancel", cancel);
+}
+
+// Untuk popup konfirmasi
+const confirmPopup = document.getElementById("confirmPopup");
+const confirmPopupText = document.getElementById("confirmPopupText");
+const confirmCancelBtn = document.getElementById("confirmCancelBtn");
+const confirmOkBtn = document.getElementById("confirmOkBtn");
+let pendingRemoveId = null;        // id video yang mau dihapus
 
     // 🔙 untuk kembali ke preview setelah close hashtag
     let lastHashtagSourceId = null;
@@ -3574,99 +3689,133 @@ if (heroCarousel) {
 }
 
 
-    function renderFilters() {
-      filtersEl.innerHTML = "";
+  function renderFilters() {
+  // kosongin isi dulu
+  filtersEl.innerHTML = "";
 
-      const mainCategories = categories;
+  const mainCategories = categories;
 
-      mainCategories.forEach((cat) => {
-        const chip = document.createElement("button");
-        chip.className =
-          "filter-chip" + (state.category === cat ? " active" : "");
-
-        const isAllChip = cat === "Semua";
-        let label;
-
-        if (isAllChip) {
-          if (state.mode === "playlist") {
-            label = "Playlist";
-          } else if (state.mode === "history") {
-            label = "History";
-          } else {
-            label = "Semua";
-          }
-        } else {
-          label = categoryLabelMap[cat] || cat;
-        }
-
-        chip.textContent = label;
-
-        chip.addEventListener("click", () => {
-          if (cat === "Semua") {
-            if (state.mode === "all") {
-              goHome();
-            }
-            return;
-          }
-
-          state.category = cat;
-          state.subFilter = null;
-          state.page = 1;
-          renderFilters();
-          renderGrid();
-        });
-
-        filtersEl.appendChild(chip);
-      });
-
-      if (
-        state.subFilter &&
-        (state.subFilter.type === "label" || state.subFilter.type === "artist")
-      ) {
-        const subChip = document.createElement("button");
-        subChip.className = "filter-chip active";
-        subChip.type = "button";
-
-        const typeLabel = state.subFilter.type === "label" ? "Label" : "Artis";
-
-        const textSpan = document.createElement("span");
-        textSpan.textContent = `${typeLabel}: ${state.subFilter.value}`;
-
-        const closeSpan = document.createElement("span");
-        closeSpan.className = "chip-close";
-        closeSpan.textContent = "✕";
-
-        subChip.appendChild(textSpan);
-        subChip.appendChild(closeSpan);
-
-        subChip.addEventListener("click", () => {
-          const returnId = lastHashtagSourceId;
-
-          state.subFilter = null;
-          state.page = 1;
-          lastHashtagSourceId = null;
-
-          renderFilters();
-          renderGrid();
-
-          if (returnId) {
-            openPlayerInline(returnId);
-          }
-        });
-
-        filtersEl.appendChild(subChip);
-      }
-
-      let labelText = categoryLabelMap[state.category] || state.category;
-      if (state.mode === "all" && state.subFilter) {
-        if (state.category === "Cinematic" && state.subFilter.type === "label") {
-          labelText = `Label • ${state.subFilter.value}`;
-        } else if (state.category === "Relax" && state.subFilter.type === "artist") {
-          labelText = `Artis • ${state.subFilter.value}`;
-        }
-      }
-      activeFilterLabelEl.textContent = labelText;
+  mainCategories.forEach((cat) => {
+    // 🔥 Di mode playlist / history: JANGAN bikin chip Label & Artis
+    if ((state.mode === "playlist" || state.mode === "history") && cat !== "Semua") {
+      return;
     }
+
+    const chip = document.createElement("button");
+    chip.className = "filter-chip" + (state.category === cat ? " active" : "");
+
+    const isAllChip = cat === "Semua";
+    let label;
+
+    if (isAllChip) {
+      if (state.mode === "playlist") {
+        label = "Playlist";
+      } else if (state.mode === "history") {
+        label = "History";
+      } else {
+        label = "Semua";
+      }
+    } else {
+      label = categoryLabelMap[cat] || cat;
+    }
+
+    chip.textContent = label;
+
+    chip.addEventListener("click", () => {
+      // klik chip "Semua"
+      if (cat === "Semua") {
+        if (state.mode === "all") {
+          // lagi di mode all → behave lama: balik ke home root
+          goHome();
+        } else {
+          // kalau lagi di playlist/history & user klik chip utama → balik ke mode all
+          state.mode = "all";
+          state.category = "Semua";
+          state.subFilter = null;
+          state.page = 1;
+
+          renderFilters();
+          renderGrid();
+          checkCarouselVisibility();
+        }
+        return;
+      }
+
+      // klik chip "Label" / "Artis" di mode all
+      state.category = cat;
+      state.subFilter = null;
+      state.page = 1;
+
+      renderFilters();
+      renderGrid();
+    });
+
+    filtersEl.appendChild(chip);
+  });
+
+  // 📂 Chip tambahan: "Label: xxx" atau "Artis: xxx" kalau lagi di dalam folder
+  if (
+    state.subFilter &&
+    (state.subFilter.type === "label" || state.subFilter.type === "artist")
+  ) {
+    const subChip = document.createElement("button");
+    subChip.className = "filter-chip active";
+    subChip.type = "button";
+
+    const typeLabel = state.subFilter.type === "label" ? "Label" : "Artis";
+
+    const textSpan = document.createElement("span");
+    textSpan.textContent = `${typeLabel}: ${state.subFilter.value}`;
+
+    const closeSpan = document.createElement("span");
+    closeSpan.className = "chip-close";
+    closeSpan.textContent = "✕";
+
+    subChip.appendChild(textSpan);
+    subChip.appendChild(closeSpan);
+
+    subChip.addEventListener("click", () => {
+      const returnId = lastHashtagSourceId;
+
+      state.subFilter = null;
+      state.page = 1;
+      lastHashtagSourceId = null;
+
+      renderFilters();
+      renderGrid();
+
+      if (returnId) {
+        openPlayerInline(returnId);
+      }
+    });
+
+    filtersEl.appendChild(subChip);
+  }
+
+  // 🔙 Chip "Kembali" khusus mode playlist & history — DI KANAN
+  if (state.mode === "playlist" || state.mode === "history") {
+    const backChip = document.createElement("button");
+    backChip.type = "button";
+    backChip.className = "filter-chip back-chip";
+    backChip.textContent = "←";
+    backChip.addEventListener("click", goBackFromMode);
+
+    filtersEl.appendChild(backChip);
+  }
+
+  // 🔤 Update text label aktif di sebelah kiri info
+  let labelText = categoryLabelMap[state.category] || state.category;
+  if (state.mode === "all" && state.subFilter) {
+    if (state.category === "Cinematic" && state.subFilter.type === "label") {
+      labelText = `Label • ${state.subFilter.value}`;
+    } else if (state.category === "Relax" && state.subFilter.type === "artist") {
+      labelText = `Artis • ${state.subFilter.value}`;
+    }
+  }
+  activeFilterLabelEl.textContent = labelText;
+}
+
+
 
     function matchesSearch(video, search) {
       if (!search) return true;
@@ -3797,17 +3946,30 @@ if (heroCarousel) {
     }
 
     function updateModeButtons() {
-      playlistBtn.classList.toggle("active", state.mode === "playlist");
-      historyBtn.classList.toggle("active", state.mode === "history");
+  playlistBtn.classList.toggle("active", state.mode === "playlist");
+  historyBtn.classList.toggle("active", state.mode === "history");
 
-      if (state.mode === "playlist") {
-        modeLabelEl.textContent = "Playlist";
-      } else if (state.mode === "history") {
-        modeLabelEl.textContent = "History";
-      } else {
-        modeLabelEl.textContent = "Semua video";
-      }
+  if (state.mode === "playlist") {
+    modeLabelEl.textContent = "Playlist";
+  } else if (state.mode === "history") {
+    modeLabelEl.textContent = "History";
+  } else {
+    modeLabelEl.textContent = "Semua video";
+  }
+
+  // 🔥 Atur visibilitas tombol Edit Playlist
+  if (playlistEditToggle) {
+    if (state.mode === "playlist") {
+      playlistEditToggle.style.display = "inline-flex";
+    } else {
+      playlistEditToggle.style.display = "none";
+      isEditingPlaylist = false;
+      playlistEditToggle.classList.remove("active");
+      playlistEditToggle.textContent = "✏️ Edit";
     }
+  }
+}
+
 
     function setSort(value) {
       state.sort = value;
@@ -3957,6 +4119,69 @@ if (searchInput) {
     playlistBtn.addEventListener("click", togglePlaylistMode);
     historyBtn.addEventListener("click", toggleHistoryMode);
     homeBtn.addEventListener("click", goHome);
+
+    if (playlistEditToggle) {
+  playlistEditToggle.addEventListener("click", () => {
+    if (state.mode !== "playlist") return;
+
+    // toggle mode edit
+    isEditingPlaylist = !isEditingPlaylist;
+
+    playlistEditToggle.classList.toggle("active", isEditingPlaylist);
+    playlistEditToggle.textContent = isEditingPlaylist ? "✅ Selesai" : "✏️ Edit";
+
+    // re-render grid biar tombol "-" muncul / hilang
+    renderGrid();
+  });
+}
+function goBackFromMode() {
+  // balik ke beranda root
+  if (playerSection.classList.contains("show")) {
+    closePlayerInline();
+  }
+
+  state.mode = "all";
+  state.category = "Semua";
+  state.subFilter = null;
+  state.page = 1;
+
+  renderFilters();
+  renderGrid();
+  checkCarouselVisibility();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function openConfirmRemoveFromPlaylist(videoId) {
+  pendingRemoveId = videoId;
+  if (confirmPopup) {
+    confirmPopup.style.display = "flex"; // atau block, nanti diatur di CSS
+  }
+}
+
+function closeConfirmRemoveFromPlaylist() {
+  pendingRemoveId = null;
+  if (confirmPopup) {
+    confirmPopup.style.display = "none";
+  }
+}
+
+// Event button popup
+if (confirmCancelBtn) {
+  confirmCancelBtn.addEventListener("click", () => {
+    closeConfirmRemoveFromPlaylist();
+  });
+}
+
+if (confirmOkBtn) {
+  confirmOkBtn.addEventListener("click", () => {
+    if (pendingRemoveId != null) {
+      // 🔥 pakai fungsi existing togglePlaylist biar sekalian update storage + toast
+      togglePlaylist(pendingRemoveId);
+    }
+    closeConfirmRemoveFromPlaylist();
+  });
+}
+
 
     function togglePlaylist(videoId) {
       const pl = getPlaylist();
@@ -4292,53 +4517,90 @@ updateSearchPlaceholder();
 
       const itemsPerRow = 5;
 
-      pageItems.forEach((video, index) => {
-        const catKind = categoryLabelMap[video.category] || video.category;
-        let metaText = catKind;
-        if (catKind === "Label") {
-          metaText = video.label || "Label";
-        } else if (catKind === "Artis") {
-          metaText = video.actress || "Artis";
-        }
+pageItems.forEach((video, index) => {
+  const catKind = categoryLabelMap[video.category] || video.category;
+  let metaText = catKind;
 
-        const card = document.createElement("div");
-        card.className = "card";
-        card.dataset.id = video.id;
+  if (catKind === "Label") {
+    metaText = video.label || "Label";
+  } else if (catKind === "Artis") {
+    metaText = video.actress || "Artis";
+  }
 
-        card.innerHTML = `
-          <div class="thumb-wrapper">
-            <img class="thumb" src="${video.thumb}" alt="${video.title}" />
-            <div class="thumb-overlay">
-              <div class="play-pill">
-                <div class="play-icon">▶</div>
-                <span>Tonton</span>
-              </div>
-            </div>
-          </div>
-          <div class="card-main">
-            <div class="card-title">${video.title}</div>
-            <div class="card-meta">
-              <span>${metaText}</span>
-            </div>
-          </div>
-        `;
+  const card = document.createElement("div");
+  card.className = "card";
+  card.dataset.id = video.id;
 
-        card.addEventListener("click", () => {
-          openPlayerInline(video.id);
-        });
+  // 🔥 Tampilkan tombol "-" hanya di mode playlist + edit aktif
+  const showRemoveBtn = state.mode === "playlist" && isEditingPlaylist;
 
-        gridEl.appendChild(card);
+  card.innerHTML = `
+    <div class="thumb-wrapper">
+      ${showRemoveBtn ? `
+        <button 
+          type="button" 
+          class="card-remove-btn" 
+          data-id="${video.id}" 
+          title="Hapus dari playlist"
+        >−</button>
+      ` : ""}
+      <img class="thumb" src="${video.thumb}" alt="${video.title}" />
+      <div class="thumb-overlay">
+        <div class="play-pill">
+          <div class="play-icon">▶</div>
+          <span>Tonton</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-main">
+      <div class="card-title">${video.title}</div>
+      <div class="card-meta">
+        <span>${metaText}</span>
+      </div>
+    </div>
+  `;
 
-        if ((index + 1) % itemsPerRow === 0 && index !== pageItems.length - 1) {
-          const sep = document.createElement("div");
-          sep.className = "grid-separator";
-          sep.innerHTML = `
-            <span class="grid-separator-line"></span>
-            <span class="grid-separator-line"></span>
-          `;
-          gridEl.appendChild(sep);
+  // 🔥 Klik biasa → buka player (kecuali habis long-press)
+  card.addEventListener("click", () => {
+    if (card._longPressActivated) {
+      // reset flag supaya klik berikutnya normal lagi
+      card._longPressActivated = false;
+      return;
+    }
+    openPlayerInline(video.id);
+  });
+
+  // 🔥 Pasang long-press khusus di halaman playlist
+  attachLongPressForPlaylist(card);
+
+  // masukin ke grid
+  gridEl.appendChild(card);
+
+  // 🔥 Pasang event untuk tombol "-" kalau lagi mode edit playlist
+  if (showRemoveBtn) {
+    const removeBtn = card.querySelector(".card-remove-btn");
+    if (removeBtn) {
+      removeBtn.addEventListener("click", (e) => {
+        e.stopPropagation(); // jangan sampai buka player
+        const id = parseInt(removeBtn.dataset.id, 10);
+        if (!isNaN(id)) {
+          openConfirmRemoveFromPlaylist(id);
         }
       });
+    }
+  }
+
+  // separator tiap 5 card (kalau masih mau dipakai)
+  if ((index + 1) % itemsPerRow === 0 && index !== pageItems.length - 1) {
+    const sep = document.createElement("div");
+    sep.className = "grid-separator";
+    sep.innerHTML = `
+      <span class="grid-separator-line"></span>
+      <span class="grid-separator-line"></span>
+    `;
+    gridEl.appendChild(sep);
+  }
+});
 
       gridEl.classList.remove("list-view");
 
