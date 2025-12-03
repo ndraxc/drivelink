@@ -2511,10 +2511,25 @@ body.theme-dark-2 {
 
 
   <script>
+
+
+// ✅ Shimmer hanya sekali per sesi
+let hasShownGridShimmerOnce = false;
+
 const gridShimmerEl = document.getElementById("gridShimmer");
 
-function showGridShimmer() {
+function showGridShimmer(force = false) {
   if (!gridShimmerEl) return;
+
+  // ❗ Kalau sudah pernah show & tidak di-force → skip shimmer
+  if (!force && hasShownGridShimmerOnce) {
+    gridShimmerEl.style.display = "none";
+    gridEl.style.display = "grid";
+    return;
+  }
+
+  // tandai kalau shimmer sudah pernah dipakai
+  hasShownGridShimmerOnce = true;
 
   gridShimmerEl.style.display = "grid";
   gridEl.style.display = "none";
@@ -2531,6 +2546,7 @@ function showGridShimmer() {
     `;
   }
 }
+
 
 function hideGridShimmer() {
   if (!gridShimmerEl) return;
