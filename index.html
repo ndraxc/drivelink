@@ -2538,6 +2538,18 @@ function hideGridShimmer() {
   gridEl.style.display = "grid";
 }
 
+function rerenderWithShimmer(fn) {
+  // tampilkan shimmer
+  showGridShimmer();
+
+  setTimeout(() => {
+    // jalankan logic yang ngubah state + render
+    if (typeof fn === "function") fn();
+
+    // sembunyikan shimmer + balikin grid
+    hideGridShimmer();
+  }, 600); // durasi bebas, mau 500–800ms silakan
+}
 
 
     const STORAGE_KEYS = {
@@ -3716,56 +3728,60 @@ if (heroCarousel) {
       // klik chip "Semua"
       if (cat === "Semua") {
         if (state.mode === "all") {
-          // lagi di mode all → behave lama: balik ke home root
           goHome();
         } else {
-          // kalau lagi di playlist/history & user klik chip utama → balik ke mode all
           state.mode = "all";
           state.category = "Semua";
           state.subFilter = null;
           state.page = 1;
 
-          renderFilters();
-          renderGrid();
-          checkCarouselVisibility();
+          rerenderWithShimmer(() => {
+            renderFilters();
+            renderGrid();
+            checkCarouselVisibility();
+          });
         }
         return;
       }
 
-      // klik chip "Label" / "Artis" di mode all
+      // klik chip "Label" / "Artis" di mode all → pakai shimmer
       state.category = cat;
       state.subFilter = null;
       state.page = 1;
 
-      renderFilters();
-      renderGrid();
+      rerenderWithShimmer(() => {
+        renderFilters();
+        renderGrid();
+      });
     });
 
     filtersEl.appendChild(chip);
   });
 
-  // 📂 Chip tambahan: "Label: xxx" atau "Artis: xxx" kalau lagi di dalam folder
+ 
+  // ❌ (1) HAPUS chip "Label: xxx" / "Artis: xxx"
+  // (blok lama dihapus, diganti logika back-chip di bawah)
+
+  // 🔙 (2) Back chip seragam:
+  // - mode playlist & history  → balik ke beranda (goBackFromMode)
+  // - di dalam folder label / artis → keluar folder + balikkan hashtag video kalau ada
+  let needBackChip = false;
+  let backHandler = null;
+
+  // a) Playlist / History
+  if (state.mode === "playlist" || state.mode === "history") {
+    needBackChip = true;
+    backHandler = goBackFromMode;
+  }
+
+  // b) Di dalam folder label / artis (mode all)
   if (
+    state.mode === "all" &&
     state.subFilter &&
     (state.subFilter.type === "label" || state.subFilter.type === "artist")
   ) {
-    const subChip = document.createElement("button");
-    subChip.className = "filter-chip active";
-    subChip.type = "button";
-
-    const typeLabel = state.subFilter.type === "label" ? "Label" : "Artis";
-
-    const textSpan = document.createElement("span");
-    textSpan.textContent = `${typeLabel}: ${state.subFilter.value}`;
-
-    const closeSpan = document.createElement("span");
-    closeSpan.className = "chip-close";
-    closeSpan.textContent = "✕";
-
-    subChip.appendChild(textSpan);
-    subChip.appendChild(closeSpan);
-
-    subChip.addEventListener("click", () => {
+    needBackChip = true;
+    backHandler = () => {
       const returnId = lastHashtagSourceId;
 
       state.subFilter = null;
@@ -3775,28 +3791,24 @@ if (heroCarousel) {
       renderFilters();
       renderGrid();
 
+      // kalau sebelumnya masuk via hashtag, balik lagi ke video itu
       if (returnId) {
         openPlayerInline(returnId);
       }
-    });
-
-    filtersEl.appendChild(subChip);
+    };
   }
 
-  // 🔙 Tombol "Kembali" khusus mode playlist & history — DI KANAN
-  if (state.mode === "playlist" || state.mode === "history") {
+  if (needBackChip) {
     const backChip = document.createElement("button");
     backChip.type = "button";
     backChip.className = "filter-chip back-chip";
     backChip.innerHTML = `
-      <span class="back-icon">⟵</span>
-      <span class="back-label"></span>
+      <span class="back-icon">←</span>
+      <span class="back-label">Kembali</span>
     `;
-    backChip.addEventListener("click", goBackFromMode);
-
+    backChip.addEventListener("click", backHandler);
     filtersEl.appendChild(backChip);
   }
-
 
   // 🔤 Update text label aktif di sebelah kiri info
   let labelText = categoryLabelMap[state.category] || state.category;
@@ -3808,6 +3820,7 @@ if (heroCarousel) {
     }
   }
   activeFilterLabelEl.textContent = labelText;
+
 }
 
 
@@ -4305,11 +4318,16 @@ if (confirmOkBtn) {
         `;
 
         card.addEventListener("click", () => {
-          state.subFilter = { type: "label", value: name };
+          state.subFilter = { type: "artist", value: name };
           state.page = 1;
-          renderFilters();
-          renderGrid();
+
+          rerenderWithShimmer(() => {
+            renderFilters();
+            renderGrid();
+          });
         });
+
+
 
         gridEl.appendChild(card);
       });
