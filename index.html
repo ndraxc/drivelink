@@ -2096,6 +2096,12 @@ body.theme-dark-2 {
         flex: 1;
         justify-content: center;
       }
+      .back-icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  stroke: currentColor;
+}
 
       .player-size {
         display: none !important;
@@ -2511,25 +2517,10 @@ body.theme-dark-2 {
 
 
   <script>
-
-
-// ✅ Shimmer hanya sekali per sesi
-let hasShownGridShimmerOnce = false;
-
 const gridShimmerEl = document.getElementById("gridShimmer");
 
-function showGridShimmer(force = false) {
+function showGridShimmer() {
   if (!gridShimmerEl) return;
-
-  // ❗ Kalau sudah pernah show & tidak di-force → skip shimmer
-  if (!force && hasShownGridShimmerOnce) {
-    gridShimmerEl.style.display = "none";
-    gridEl.style.display = "grid";
-    return;
-  }
-
-  // tandai kalau shimmer sudah pernah dipakai
-  hasShownGridShimmerOnce = true;
 
   gridShimmerEl.style.display = "grid";
   gridEl.style.display = "none";
@@ -2546,7 +2537,6 @@ function showGridShimmer(force = false) {
     `;
   }
 }
-
 
 function hideGridShimmer() {
   if (!gridShimmerEl) return;
@@ -3744,31 +3734,29 @@ if (heroCarousel) {
       // klik chip "Semua"
       if (cat === "Semua") {
         if (state.mode === "all") {
+          // lagi di mode all → behave lama: balik ke home root
           goHome();
         } else {
+          // kalau lagi di playlist/history & user klik chip utama → balik ke mode all
           state.mode = "all";
           state.category = "Semua";
           state.subFilter = null;
           state.page = 1;
 
-          rerenderWithShimmer(() => {
-            renderFilters();
-            renderGrid();
-            checkCarouselVisibility();
-          });
+          renderFilters();
+          renderGrid();
+          checkCarouselVisibility();
         }
         return;
       }
 
-      // klik chip "Label" / "Artis" di mode all → pakai shimmer
+      // klik chip "Label" / "Artis" di mode all
       state.category = cat;
       state.subFilter = null;
       state.page = 1;
 
-      rerenderWithShimmer(() => {
-        renderFilters();
-        renderGrid();
-      });
+      renderFilters();
+      renderGrid();
     });
 
     filtersEl.appendChild(chip);
@@ -3819,8 +3807,12 @@ if (heroCarousel) {
     backChip.type = "button";
     backChip.className = "filter-chip back-chip";
     backChip.innerHTML = `
-      <span class="back-icon">←</span>
-      <span class="back-label">Kembali</span>
+    <span class="back-icon">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 18L8 12L14 6" />
+  </svg>
+</span>
+
     `;
     backChip.addEventListener("click", backHandler);
     filtersEl.appendChild(backChip);
@@ -4334,16 +4326,11 @@ if (confirmOkBtn) {
         `;
 
         card.addEventListener("click", () => {
-          state.subFilter = { type: "artist", value: name };
+          state.subFilter = { type: "label", value: name };
           state.page = 1;
-
-          rerenderWithShimmer(() => {
-            renderFilters();
-            renderGrid();
-          });
+          renderFilters();
+          renderGrid();
         });
-
-
 
         gridEl.appendChild(card);
       });
