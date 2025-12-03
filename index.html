@@ -31,6 +31,26 @@
       --pill-dark-border: rgba(148,163,184,0.4);
       --pill-dark-text: #e5e7eb;
     }
+/* 🌌 Dark Mode 2 — versi lebih neon / beda nuansa */
+body.theme-dark-2 {
+  --bg: #0d0b09;                       /* hitam brownish klasik */
+  --bg-soft: rgba(32, 28, 24, 0.7);     /* soft brown gelap */
+
+  --accent: #c9a675;                    /* gold-olive klasik */
+  --accent-red: #b55b52;                /* merah marun tua, elegan */
+
+  --accent-soft: rgba(201,166,117,0.18); /* gold glow tipis */
+
+  --text: #e8dfd3;                      /* putih warm old-paper */
+  --text-white: #ffffff;
+
+  --muted: #ada393;                     /* abu klasik */
+
+  --border: rgba(201,166,117,0.35);     /* garis gold kusam */
+  --border-light: rgba(255,255,255,0.08);
+
+  --glow-color: rgba(201,166,117,0.18);  /* glow gold kusam lembut */
+}
 
     body.theme-dark .card {
       background: #2a2a2a85 !important;
@@ -64,6 +84,25 @@
   padding: 8px 15px !important;      /* naik sedikit */
   font-size: 0.78rem !important;     /* naik tipis */
   border-radius: 11px !important;
+}
+.filter-chip.back-chip {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 3px 10px;
+  font-size: 0.78rem;
+  border-radius: 999px;
+
+  background: var(--bg-soft);
+
+  /* 🔥 ganti stroke jadi putih */
+  border: 1px solid #ffffff !important;
+
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.2); /* sedikit glow putih */
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
 /* Mobile */
@@ -2554,71 +2593,8 @@ const videos = [
   /* ============================
      ✅ 1. DVMM-292
   ============================= */
-  {
-    id: 1,
-    title: "DVMM-292",
-    duration: "00:00",
-    durationSec: 0,
-    category: "Cinematic",
-    thumb: driveThumbnail("1RBzMXL1Mjt4l1E_48stODHCny9NAYI8z"),
-    src: driveDirect("https://drive.google.com/file/d/1RBzMXL1Mjt4l1E_48stODHCny9NAYI8z/view?usp=drive_link"),
-    embed: "https://drive.google.com/file/d/1RBzMXL1Mjt4l1E_48stODHCny9NAYI8z/preview",
-    date: "2025-01-01",
-    description: "Video DVMM-292",
-    kode: "DVMM-292",
-    studio: "Unknown",
-    label: "Unknown",
-    actor: "—",
-    actress: "—",
-    size: "—",
-    downloadUrl: driveDirect("1RBzMXL1Mjt4l1E_48stODHCny9NAYI8z")
-  },
+  
 
-  /* ============================
-     ✅ 2. HSODA-052
-  ============================= */
-  {
-    id: 2,
-    title: "HSODA-052",
-    duration: "00:00",
-    durationSec: 0,
-    category: "Cinematic",
-    thumb: driveThumbnail("1n2bkvkgYdtGzbbOcTfHAYmZop0W5Q8Be"),
-    src: driveDirect("https://drive.google.com/file/d/1n2bkvkgYdtGzbbOcTfHAYmZop0W5Q8Be/view?usp=drive_link"),
-    embed: "https://drive.google.com/file/d/1n2bkvkgYdtGzbbOcTfHAYmZop0W5Q8Be/preview",
-    date: "2025-01-01",
-    description: "Video HSODA-052",
-    kode: "HSODA-052",
-    studio: "Unknown",
-    label: "Unknown",
-    actor: "—",
-    actress: "—",
-    size: "—",
-    downloadUrl: driveDirect("1n2bkvkgYdtGzbbOcTfHAYmZop0W5Q8Be")
-  },
-
-  /* ============================
-     ✅ 3. SDJS-200
-  ============================= */
-  {
-    id: 3,
-    title: "SDJS-200",
-    duration: "00:00",
-    durationSec: 0,
-    category: "Cinematic",
-    thumb: driveThumbnail("1n654H3AsLiycM1s4UNZZRVgpGiEf1o4m"),
-    src: driveDirect("https://drive.google.com/file/d/1n654H3AsLiycM1s4UNZZRVgpGiEf1o4m/view?usp=drive_link"),
-    embed: "https://drive.google.com/file/d/1n654H3AsLiycM1s4UNZZRVgpGiEf1o4m/preview",
-    date: "2025-01-01",
-    description: "Video SDJS-200",
-    kode: "SDJS-200",
-    studio: "Unknown",
-    label: "Unknown",
-    actor: "—",
-    actress: "—",
-    size: "—",
-    downloadUrl: driveDirect("1n654H3AsLiycM1s4UNZZRVgpGiEf1o4m")
-  },
 
   /* ➤ LIST VIDEO LAIN TETAP LANJUTKAN DI BAWAH SINI */
 
@@ -3228,29 +3204,52 @@ if (searchClearBtn && searchInput) {
       }, 1800);
     }
 
-    function applyTheme(theme) {
-      if (theme === "light") {
-        body.classList.remove("theme-dark");
-        body.classList.add("theme-light");
-        themeIcon.textContent = "☀️";
-        themeLabel.textContent = "Light";
-      } else {
-        body.classList.remove("theme-light");
-        body.classList.add("theme-dark");
-        themeIcon.textContent = "🌙";
-        themeLabel.textContent = "Dark";
-      }
-      saveToStorage(STORAGE_KEYS.THEME, theme);
-    }
+// daftar tema yang kita support
+const THEMES = ["dark", "light", "dark2"];
 
-    const savedTheme = loadFromStorage(STORAGE_KEYS.THEME, "dark");
-    applyTheme(savedTheme === "light" ? "light" : "dark");
+function applyTheme(theme) {
+  // bersihkan semua class tema dulu
+  body.classList.remove("theme-dark", "theme-light", "theme-dark-2");
 
-    themeToggleBtn.addEventListener("click", () => {
-      const current = body.classList.contains("theme-light") ? "light" : "dark";
-      const next = current === "light" ? "dark" : "light";
-      applyTheme(next);
-    });
+  if (theme === "light") {
+    body.classList.add("theme-light");
+    themeIcon.textContent = "☀️";
+    themeLabel.textContent = "Light";
+  } else if (theme === "dark2") {
+    body.classList.add("theme-dark-2");
+    themeIcon.textContent = "🌌";
+    themeLabel.textContent = "Dark 2";
+  } else {
+    // default = dark
+    body.classList.add("theme-dark");
+    themeIcon.textContent = "🌙";
+    themeLabel.textContent = "Dark";
+    theme = "dark";
+  }
+
+  saveToStorage(STORAGE_KEYS.THEME, theme);
+}
+
+// 🔁 ambil tema terakhir dari localStorage
+const savedTheme = loadFromStorage(STORAGE_KEYS.THEME, "dark");
+applyTheme(THEMES.includes(savedTheme) ? savedTheme : "dark");
+
+// 🔘 klik tombol = siklus Dark → Light → Dark2
+themeToggleBtn.addEventListener("click", () => {
+  let currentTheme = "dark";
+
+  if (body.classList.contains("theme-light")) {
+    currentTheme = "light";
+  } else if (body.classList.contains("theme-dark-2")) {
+    currentTheme = "dark2";
+  }
+
+  const currentIndex = THEMES.indexOf(currentTheme);
+  const nextTheme = THEMES[(currentIndex + 1) % THEMES.length];
+
+  applyTheme(nextTheme);
+});
+
 
     function uniqueValues(arr) {
       return Array.from(new Set(arr.filter(Boolean)));
@@ -3501,60 +3500,36 @@ function renderCarousel() {
     }
 
     function checkCarouselVisibility() {
-      const isPlayerOpen = playerSection.classList.contains("show");
-      const isSearchFocused = document.activeElement === searchInput;
-      const hasHistory = getHistory().length > 0;
+  const isPlayerOpen   = playerSection.classList.contains("show");
+  const isSearchFocused = document.activeElement === searchInput;
 
-     const isRootHome =
-  state.mode === "all" &&
-  state.category === "Semua" &&
-  !state.subFilter;
+  // 🔥 Carousel HANYA aktif di beranda:
+  // mode = all, kategori = Semua, tidak ada subFilter
+  const isRootHome =
+    state.mode === "all" &&
+    state.category === "Semua" &&
+    !state.subFilter;
 
-// 🔥 Folder label/artis bisa di semua mode
-const isFolderLabel =
-  state.category === "Cinematic" &&
-  state.subFilter &&
-  state.subFilter.type === "label";
-
-const isFolderArtist =
-  state.category === "Relax" &&
-  state.subFilter &&
-  state.subFilter.type === "artist";
-
-
-      let hasFolderVideos = false;
-      if (isFolderLabel || isFolderArtist) {
-        const baseList = getModeBaseList();
-        const target = (state.subFilter.value || "").toLowerCase();
-        const folderVideos = baseList.filter(v =>
-          isFolderLabel
-            ? (v.label || "").toLowerCase() === target
-            : (v.actress || "").toLowerCase() === target
-        );
-        hasFolderVideos = folderVideos.length > 0;
-      }
-
-      if (isSearchFocused) {
-        heroCarousel.classList.add("is-hidden");
-        return;
-      }
-
-   if (
-    !isPlayerOpen &&
-    (
-      // 🔥 Beranda: SELALU boleh tampil (history ada / tidak),
-      // karena sekarang renderCarousel sudah punya fallback 3 video terbaru
-      isRootHome ||
-      // 📂 Folder label / artis: tetap butuh video di folder tsb
-      ((isFolderLabel || isFolderArtist) && hasFolderVideos)
-    )
-  ) {
-    heroCarousel.classList.remove("is-hidden");
-  } else {
+  // Kalau:
+  // - bukan beranda, atau
+  // - player kebuka, atau
+  // - lagi fokus ngetik di search
+  // 👉 carousel wajib sembunyi + auto-slide dimatiin
+  if (!isRootHome || isPlayerOpen || isSearchFocused) {
     heroCarousel.classList.add("is-hidden");
+    clearCarouselTimers();   // stop auto carousel
+    return;
   }
 
-    }
+  // Sampai sini berarti bener-bener di beranda & aman tampil
+  heroCarousel.classList.remove("is-hidden");
+
+  // kalau slide-nya lebih dari 1, boleh auto jalan
+  if (heroSlideCount > 1) {
+    startCarouselInterval(heroSlideCount);
+  }
+}
+
 
 function startCarouselInterval(count) {
   clearCarouselTimers();
@@ -3808,16 +3783,20 @@ if (heroCarousel) {
     filtersEl.appendChild(subChip);
   }
 
-  // 🔙 Chip "Kembali" khusus mode playlist & history — DI KANAN
+  // 🔙 Tombol "Kembali" khusus mode playlist & history — DI KANAN
   if (state.mode === "playlist" || state.mode === "history") {
     const backChip = document.createElement("button");
     backChip.type = "button";
     backChip.className = "filter-chip back-chip";
-    backChip.textContent = "←";
+    backChip.innerHTML = `
+      <span class="back-icon">⟵</span>
+      <span class="back-label"></span>
+    `;
     backChip.addEventListener("click", goBackFromMode);
 
     filtersEl.appendChild(backChip);
   }
+
 
   // 🔤 Update text label aktif di sebelah kiri info
   let labelText = categoryLabelMap[state.category] || state.category;
